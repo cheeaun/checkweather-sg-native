@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Today View Controller-->
+        <scene sceneID="cwh-vc-ff4">
+            <objects>
+                <viewController id="M4Y-Lb-cyx" customClass="TodayViewController" customModule="Check_Weather_SG" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S3S-Oj-5AN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="177"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5iM-Kq-clv" userLabel="radarImage">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="177"/>
+                            </imageView>
+                            <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="5jk-Eo-Wps" userLabel="loader">
+                                <rect key="frame" x="280" y="0.0" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="umu-tU-igM"/>
+                                    <constraint firstAttribute="height" constant="40" id="yrs-Gp-8qJ"/>
+                                </constraints>
+                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.070788823070000007" green="0.07846233994" blue="0.074356071649999994" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="5iM-Kq-clv" secondAttribute="bottom" id="2JP-Gv-wN8"/>
+                            <constraint firstItem="5jk-Eo-Wps" firstAttribute="top" secondItem="5iM-Kq-clv" secondAttribute="top" id="B89-au-aqv"/>
+                            <constraint firstAttribute="trailing" secondItem="5iM-Kq-clv" secondAttribute="trailing" id="KdN-YH-CJy"/>
+                            <constraint firstItem="5iM-Kq-clv" firstAttribute="top" secondItem="S3S-Oj-5AN" secondAttribute="top" id="VQi-qw-pLf"/>
+                            <constraint firstItem="5jk-Eo-Wps" firstAttribute="trailing" secondItem="5iM-Kq-clv" secondAttribute="trailing" id="WU2-vG-z0h"/>
+                            <constraint firstItem="5iM-Kq-clv" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leading" id="p6L-PB-kgD"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Gho-Km-ZuH"/>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="177"/>
+                    <connections>
+                        <outlet property="loader" destination="5jk-Eo-Wps" id="M56-Jq-6M7"/>
+                        <outlet property="radarImage" destination="5iM-Kq-clv" id="mRC-3m-ktC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="69.642857142857139"/>
+        </scene>
+    </scenes>
+</document>
