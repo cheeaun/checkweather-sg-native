@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "node ./add-secrets.js"
   },
   "dependencies": {
     "@react-native-community/blur": "~3.6.0",
@@ -18,6 +19,9 @@
     "@react-native-firebase/messaging": "~6.7.1",
     "@react-native-mapbox-gl/maps": "~8.0.0",
     "@turf/helpers": "~6.1.4",
+    "appcenter": "3.0.2",
+    "appcenter-analytics": "3.0.2",
+    "appcenter-crashes": "3.0.2",
     "chaikin": "~1.0.0",
     "d3-contour": "~1.3.2",
     "expo-haptics": "~8.1.0",

@@ -60,3 +60,4 @@ buck-out/
 
 # Others
 GoogleService-Info.plist
+AppCenter-Config.plist

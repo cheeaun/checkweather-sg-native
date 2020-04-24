@@ -9,6 +9,9 @@
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 
 #import <Firebase.h>
+#import <AppCenterReactNative.h>
+#import <AppCenterReactNativeAnalytics.h>
+#import <AppCenterReactNativeCrashes.h>
 
 #if RCT_DEV
 #import <React/RCTDevLoadingView.h>
@@ -61,6 +64,10 @@ static void InitializeFlipper(UIApplication *application) {
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }
+  
+  [AppCenterReactNative register];
+  [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
+  [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
   
   return YES;
 }
