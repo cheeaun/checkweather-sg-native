@@ -22,7 +22,7 @@ import nanomemoize from 'nano-memoize';
 import { featureCollection, point, polygon, round } from '@turf/helpers';
 import { chaikin } from 'chaikin';
 
-import BlurView from './components/UI/BlurView';
+import BlurStatusBar from './components/BlurStatusBar';
 import InfoSheet from './components/InfoSheet';
 import InfoButton from './components/InfoButton';
 import LocationButton from './components/LocationButton';
@@ -513,17 +513,7 @@ const App = () => {
           <UserLocation showsUserHeadingIndicator renderMode="native" />
         )}
       </MapView>
-      <BlurView
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: safeArea.top,
-        }}
-        blurType="dark"
-        pointerEvents="none"
-      />
+      <BlurStatusBar />
       <SafeAreaView style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <Animated.View
           style={[styles.flex, styles.relative, { opacity: mapCornersAnim }]}
