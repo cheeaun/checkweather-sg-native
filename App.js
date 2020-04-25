@@ -184,6 +184,14 @@ const testRadar = () => {
   return test;
 };
 
+function debounce(fn, wait = 1) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn.call(this, ...args), wait);
+  };
+}
+
 const App = () => {
   const currentAppState = useAppState();
 
@@ -243,21 +251,25 @@ const App = () => {
 
   const [snapshots, setSnapshots] = useState([]);
   const snapshotsCount = snapshots.length;
-  const [rainRadarGeoJSON, setRainRadarGeoJSON] = useState(
-    featureCollection([]),
-  );
 
   const rainRadarLayerRef = useRef(null);
   const mapRef = useRef(null);
   const setRainRadarFilterID = (id, index) => {
-    if (rainRadarLayerRef.current) {
+    if (id && rainRadarLayerRef.current) {
       rainRadarLayerRef.current.setNativeProps({
         filter: ['==', 'id', id],
       });
     }
-    if (mapRef.current) {
+    if (index && mapRef.current) {
       const obsVisibility = index >= snapshotsCount - 1;
       mapRef.current.setSourceVisibility(obsVisibility, 'observations');
+    }
+  };
+
+  const rainRadarSourceRef = useRef(null);
+  const setRainRadarGeoJSON = shape => {
+    if (shape && rainRadarSourceRef.current) {
+      rainRadarSourceRef.current.setNativeProps({ shape });
     }
   };
 
@@ -265,12 +277,12 @@ const App = () => {
   let first = useRef(true);
   const processSnapshots = s => {
     const startTime = new Date();
-    console.log('SNAPSHOTS START');
     const shots = [];
     const geoJSONList = [];
 
     const docs = s.docs.reverse();
-    docs.forEach((doc, i) => {
+    for (let i = 0, l = docs.length; i < l; i++) {
+      const doc = docs[i];
       const rainarea = doc.data();
       const values = convertRadar2Values(doc.id, rainarea.radar);
       const geojsons = convertValues2GeoJSON(doc.id, values);
@@ -287,39 +299,44 @@ const App = () => {
       }
 
       shots.push(rainarea);
-    });
+      // await nextFrame();
+    }
 
     const collection = featureCollection(geoJSONList);
-    setRainRadarGeoJSON(collection);
+    InteractionManager.runAfterInteractions(() => {
+      setRainRadarGeoJSON(collection);
+    });
     setSnapshots(shots);
     setLoading(false);
-    console.log('SNAPSHOTS END', (new Date() - startTime) / 1000);
+    console.log(`PROCESS SNAPSHOTS ${(new Date() - startTime) / 1000}s`);
   };
+
+  const debouncedOnSnapshot = debounce(s => {
+    console.log('SNAPSHOT TIME', first.current, new Date());
+    setLoading(true);
+    if (first.current) {
+      const firstDoc = s.docs[0];
+      const radar = firstDoc.data().radar;
+      // const radar = testRadar();
+      const values = convertRadar2Values(firstDoc.id, radar);
+      const geojsons = convertValues2GeoJSON(firstDoc.id, values);
+      setRainRadarGeoJSON(featureCollection(geojsons));
+    }
+    InteractionManager.runAfterInteractions(() => {
+      processSnapshots(s);
+    });
+    first.current = false;
+  }, 300);
 
   useEffect(() => {
     let unsub = () => {};
     if (currentAppState === 'active') {
-      unsub = weatherDB.onSnapshot(s => {
-        setLoading(true);
-        if (first.current) {
-          console.log('SNAPSHOT TIME 1');
-          const firstDoc = s.docs[0];
-          const radar = firstDoc.data().radar;
-          // const radar = testRadar();
-          const values = convertRadar2Values(firstDoc.id, radar);
-          const geojsons = convertValues2GeoJSON(firstDoc.id, values);
-          setRainRadarGeoJSON(featureCollection(geojsons));
-          InteractionManager.runAfterInteractions(() => processSnapshots(s));
-        } else {
-          console.log('SNAPSHOT TIME 2');
-          processSnapshots(s);
-        }
-      });
-    } else {
-      first.current = false;
+      unsub = weatherDB.onSnapshot(debouncedOnSnapshot);
     }
-
-    return () => unsub();
+    return () => {
+      unsub();
+      first.current = false;
+    };
   }, [currentAppState === 'active']);
 
   const [showInfoSheet, setShowInfoSheet] = useState(false);
@@ -394,7 +411,11 @@ const App = () => {
             arrow: arrowDownImage,
           }}
         />
-        <ShapeSource id="rainradar" shape={rainRadarGeoJSON}>
+        <ShapeSource
+          ref={rainRadarSourceRef}
+          id="rainradar"
+          shape={featureCollection([])}
+        >
           <FillLayer
             ref={rainRadarLayerRef}
             id="rainradar"
