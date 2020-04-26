@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { TouchableOpacity, View, Text, Animated, Easing } from 'react-native';
 import Slider from '@react-native-community/slider';
 import * as Haptics from 'expo-haptics';
@@ -75,11 +75,15 @@ export default ({
     setSliderValue(initialValue);
   }, []);
 
-  useEffect(() => {
-    if (index && index < snapshotsCount && !playing) {
-      setFwd(true);
-    }
-  }, [snapshots]);
+  useEffect(
+    useCallback(() => {
+      if (index && index < snapshotsCount && !playing) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        setFwd(true);
+      }
+    }, [index, playing]),
+    [snapshots],
+  );
 
   useInterval(
     () => {
@@ -136,9 +140,7 @@ export default ({
           style={styles.playButton}
           onPress={() => {
             if (fwd) {
-              Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Success,
-              );
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
               setIndex(snapshotsCount);
               setSliderValue(snapshotsCount);
               setFwd(false);
@@ -149,6 +151,12 @@ export default ({
               setIndex(1);
             }
             setPlaying(!playing);
+          }}
+          onLongPress={() => {
+            if (fwd || playing || index === snapshotsCount) return;
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            setIndex(snapshotsCount);
+            setSliderValue(snapshotsCount);
           }}
         >
           {fwd ? (
