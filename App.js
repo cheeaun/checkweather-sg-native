@@ -28,7 +28,6 @@ import InfoButton from './components/InfoButton';
 import LocationButton from './components/LocationButton';
 import Player from './components/Player';
 
-import useSafeArea from './hooks/useSafeArea';
 import WindDirectionContext from './contexts/wind-direction';
 import meanAngleDeg from './utils/meanAngleDeg';
 
@@ -357,7 +356,6 @@ const App = () => {
     }
   }, [showInfoSheet]);
 
-  const safeArea = useSafeArea();
   const cameraRef = useRef(null);
   const currentMapZoom = useRef(0);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
