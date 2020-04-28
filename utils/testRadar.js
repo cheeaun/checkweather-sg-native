@@ -64,8 +64,14 @@ const randomRadar = () => {
   return radar;
 };
 
+let prevIndex;
 const testRadar = () => {
-  return gradientRadars[Math.round(Math.random() * 3)];
+  let index;
+  do {
+    index = Math.round(Math.random() * 3);
+  } while (index === prevIndex);
+  prevIndex = index;
+  return gradientRadars[index];
   // if (Math.round(Math.random())) {
   // } else {
   //   return gradient2Radar;
