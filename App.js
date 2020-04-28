@@ -66,17 +66,6 @@ function debounce(fn, wait = 1) {
 const App = () => {
   const currentAppState = useAppState();
 
-  if (__DEV__) {
-    useEffect(() => {
-      messaging()
-        .getToken()
-        .then(token => {
-          console.log(token);
-        })
-        .catch(() => {});
-    }, []);
-  }
-
   const [locationGranted, setLocationGranted] = useState(false);
   const [locationAskAgain, setLocationAskAgain] = useState(false);
   useEffect(() => {

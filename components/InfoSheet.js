@@ -128,6 +128,17 @@ const SheetBlock = ({
 export default ({ onClose, ...props }) => {
   const { width: windowWidth } = useWindowDimensions();
 
+  if (__DEV__) {
+    useEffect(() => {
+      messaging()
+        .getToken()
+        .then(token => {
+          console.log(token);
+        })
+        .catch(() => {});
+    }, []);
+  }
+
   return (
     <BlurView
       {...props}
