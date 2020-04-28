@@ -26,7 +26,10 @@ import LocationButton from './components/LocationButton';
 import Player from './components/Player';
 
 import WindDirectionContext from './contexts/wind-direction';
+
 import meanAngleDeg from './utils/meanAngleDeg';
+import debounce from './utils/debounce';
+import testRadar from './utils/testRadar';
 import {
   convertRadar2Values,
   convertValues2GeoJSON,
@@ -35,6 +38,7 @@ import {
 
 import styles from './styles/global';
 
+const TEST_RADAR = true;
 
 const RAINAREA_COUNT = 25;
 const weatherDB = firestore()
@@ -42,25 +46,12 @@ const weatherDB = firestore()
   .orderBy('id', 'desc')
   .limit(RAINAREA_COUNT);
 
-const testRadar = () => {
-  let test = '';
-  for (let i = 0; i < height; i++) {
-    for (let j = 0; j < width; j++) {
-      const intensity = ~~Math.round((j / width) * 100);
-      const c = String.fromCharCode(intensity + 33);
-      test += c;
-    }
-    test += '\n';
-  }
-  return test;
-};
-
-function debounce(fn, wait = 1) {
-  let timeout;
-  return function(...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn.call(this, ...args), wait);
-  };
+function pTimeout(t = 1) {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(res);
+    }, t);
+  });
 }
 
 const App = () => {
@@ -137,59 +128,92 @@ const App = () => {
   };
 
   const [loading, setLoading] = useState(false);
-  let first = useRef(true);
-  const processSnapshots = s => {
-    const startTime = new Date();
+  const first = useRef(true);
+  const processCount = useRef(0);
+  const processSnapshots = async s => {
+    const processID = ++processCount.current;
+    console.log({ processID });
     const shots = [];
     const geoJSONList = [];
+    let timeDiff;
 
     const docs = s.docs.reverse();
+    let startTime = Date.now();
     for (let i = 0, l = docs.length; i < l; i++) {
+      if (processID !== processCount.current) return;
+
       const doc = docs[i];
       const rainarea = doc.data();
-      const values = convertRadar2Values(doc.id, rainarea.radar);
+      const values = convertRadar2Values(
+        doc.id,
+        TEST_RADAR ? testRadar() : rainarea.radar,
+      );
       const geojsons = convertValues2GeoJSON(doc.id, values);
       geoJSONList.push(...geojsons);
+      shots.push(rainarea);
+
+      timeDiff = Date.now() - startTime;
+      if (timeDiff > 200) {
+        console.log(`SNAPSHOT SECTION ${i}: ${timeDiff}ms`);
+        await pTimeout();
+        startTime = Date.now();
+      }
 
       const nextDoc = docs[i + 1];
       if (nextDoc) {
         const nextRainArea = nextDoc.data();
-        const nextValues = convertRadar2Values(nextDoc.id, nextRainArea.radar);
+        const nextValues = convertRadar2Values(
+          nextDoc.id,
+          TEST_RADAR ? testRadar() : nextRainArea.radar,
+        );
         const midID = `${(Number(doc.id) + Number(nextDoc.id)) / 2}`;
         const midValues = genMidValues(midID, values, nextValues);
-        const nextGeojsons = convertValues2GeoJSON(midID, midValues);
-        geoJSONList.push(...nextGeojsons);
-      }
+        const midGeojsons = convertValues2GeoJSON(midID, midValues);
+        geoJSONList.push(...midGeojsons);
 
-      shots.push(rainarea);
-      // await nextFrame();
+        timeDiff = Date.now() - startTime;
+        if (timeDiff > 200) {
+          console.log(`SNAPSHOT SECTION ${i}: ${timeDiff}ms`);
+          await pTimeout();
+          startTime = Date.now();
+        }
+      }
     }
 
-    const collection = featureCollection(geoJSONList);
+    timeDiff = Date.now() - startTime;
+    console.log(`SNAPSHOT SECTION last: ${timeDiff}ms`);
+
     InteractionManager.runAfterInteractions(() => {
+      if (processID !== processCount.current) return;
+      const startTime = Date.now();
+      setSnapshots(shots);
+      const collection = featureCollection(geoJSONList);
       setRainRadarGeoJSON(collection);
+      setLoading(false);
+      console.log(`RENDER GEOJSON: ${Date.now() - startTime}ms`);
     });
-    setSnapshots(shots);
-    setLoading(false);
-    console.log(`PROCESS SNAPSHOTS ${(new Date() - startTime) / 1000}s`);
   };
 
-  const debouncedOnSnapshot = debounce(s => {
+  const onSnapshot = s => {
     console.log('SNAPSHOT TIME', first.current, new Date());
     setLoading(true);
     if (first.current) {
       const firstDoc = s.docs[0];
       const radar = firstDoc.data().radar;
-      // const radar = testRadar();
-      const values = convertRadar2Values(firstDoc.id, radar);
+      const values = convertRadar2Values(
+        firstDoc.id,
+        TEST_RADAR ? testRadar() : radar,
+      );
       const geojsons = convertValues2GeoJSON(firstDoc.id, values);
-      setRainRadarGeoJSON(featureCollection(geojsons));
+      const collection = featureCollection(geojsons);
+      setRainRadarGeoJSON(collection);
     }
     InteractionManager.runAfterInteractions(() => {
       processSnapshots(s);
     });
     first.current = false;
-  }, 300);
+  };
+  const debouncedOnSnapshot = debounce(onSnapshot, 300);
 
   useEffect(() => {
     let unsub = () => {};
@@ -205,19 +229,11 @@ const App = () => {
   const [showInfoSheet, setShowInfoSheet] = useState(false);
   const mapCornersAnim = useRef(new Animated.Value(1)).current;
   useEffect(() => {
-    if (showInfoSheet) {
-      Animated.timing(mapCornersAnim, {
-        useNativeDriver: true,
-        toValue: 0,
-        duration: 300,
-      }).start();
-    } else {
-      Animated.timing(mapCornersAnim, {
-        useNativeDriver: true,
-        toValue: 1,
-        duration: 300,
-      }).start();
-    }
+    Animated.timing(mapCornersAnim, {
+      useNativeDriver: true,
+      toValue: showInfoSheet ? 0 : 300,
+      duration: 300,
+    }).start();
   }, [showInfoSheet]);
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
