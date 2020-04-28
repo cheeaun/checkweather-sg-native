@@ -38,7 +38,7 @@ import {
 
 import styles from './styles/global';
 
-const TEST_RADAR = true;
+const TEST_RADAR = false;
 
 const RAINAREA_COUNT = 25;
 const weatherDB = firestore()
