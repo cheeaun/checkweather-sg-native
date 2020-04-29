@@ -18,25 +18,24 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     var timer = Timer()
   
     func loadImage() {
-        DispatchQueue.main.async() {
-            self.loader.startAnimating()
-            
+        self.loader.startAnimating()
+        
+        DispatchQueue.global().async {
             let imageUrl = URL(string: self.radarImageURL)
             let imageData = try? Data(contentsOf: imageUrl!)
             if let image = imageData {
-                self.radarImage.image = UIImage(data: image)
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    self.loader.stopAnimating()
+                DispatchQueue.main.async {
+                    self.radarImage.image = UIImage(data: image)
                 }
-
+                
                 // Logging
                 let date = Date()
                 let formatter = DateFormatter()
                 formatter.dateFormat = "HH:mm:ss a"
                 let time = formatter.string(from: date)
                 print("\(time) \(image.count)")
-            } else {
+            }
+            DispatchQueue.main.async {
                 self.loader.stopAnimating()
             }
         }
