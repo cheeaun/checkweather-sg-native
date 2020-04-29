@@ -77,12 +77,14 @@ export default ({
 
   useEffect(
     useCallback(() => {
-      if (index && index < snapshotsCount && !playing) {
+      if (index && !playing) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        setFwd(true);
+        if (index < snapshotsCount) {
+          setFwd(true);
+        }
       }
     }, [index, playing]),
-    [snapshots],
+    [snapshots.map(s => s.id).join()],
   );
 
   useInterval(
@@ -123,6 +125,8 @@ export default ({
 
     onRainIDChange(id, floatIndex);
   }, [Math.round(index / 0.5) * 0.5, snapshots]);
+
+  const sliderHapticValue = useRef(0);
 
   return (
     <Animated.View
@@ -186,7 +190,18 @@ export default ({
           </Text>
           <Slider
             ref={sliderRef}
-            onValueChange={setIndex}
+            onValueChange={v => {
+              const roundIndex = Math.round(v);
+              const floatIndex = Math.round(v / 0.5) * 0.5;
+              if (
+                floatIndex === roundIndex &&
+                roundIndex !== sliderHapticValue.current
+              ) {
+                sliderHapticValue.current = roundIndex;
+                Haptics.selectionAsync();
+              }
+              setIndex(v);
+            }}
             onSlidingStart={() => {
               setPlaying(false);
               setFwd(false);
@@ -195,7 +210,7 @@ export default ({
               const roundIndex = Math.round(v);
               setIndex(roundIndex);
               setSliderValue(roundIndex);
-              Haptics.selectionAsync();
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }}
             minimumValue={1}
             maximumValue={snapshotsCount}
