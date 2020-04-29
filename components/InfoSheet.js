@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import {
   Settings,
   View,
@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
   ScrollView,
   TouchableHighlight,
+  Animated,
 } from 'react-native';
 import { useAppState } from '@react-native-community/hooks';
 import messaging from '@react-native-firebase/messaging';
@@ -28,13 +29,41 @@ import arrowDownImage from '../assets/arrow-down-white.png';
 
 const WindArrow = () => {
   const windDirection = useContext(WindDirectionContext);
+
+  const windDir = useRef(new Animated.Value(windDirection - 15)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(windDir, {
+          useNativeDriver: true,
+          toValue: windDirection + 15,
+          duration: 3000,
+        }),
+        Animated.timing(windDir, {
+          useNativeDriver: true,
+          toValue: windDirection - 15,
+          duration: 3000,
+        }),
+      ]),
+    ).start();
+
+    return () => {
+      Animated.timing(windDir).stop();
+    };
+  }, [windDirection]);
+
+  const rotate = windDir.interpolate({
+    inputRange: [-360, 360],
+    outputRange: ['-360deg', '360deg'],
+  });
+
   return (
-    <Image
+    <Animated.Image
       style={{
         width: 10,
         height: 10,
         opacity: 0.7,
-        transform: [{ rotate: `${windDirection}deg` }],
+        transform: [{ rotate }],
       }}
       source={arrowDownImage}
     />
