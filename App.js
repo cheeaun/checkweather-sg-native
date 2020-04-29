@@ -129,10 +129,9 @@ const App = () => {
 
   const [loading, setLoading] = useState(false);
   const first = useRef(true);
-  const processCount = useRef(0);
-  const processSnapshots = async s => {
-    const processID = ++processCount.current;
-    console.log({ processID });
+  const snapshotCount = useRef(0);
+
+  const processSnapshots = async (snapshotID, s) => {
     const shots = [];
     const geoJSONList = [];
     let timeDiff;
@@ -140,7 +139,7 @@ const App = () => {
     const docs = s.docs.reverse();
     let startTime = Date.now();
     for (let i = 0, l = docs.length; i < l; i++) {
-      if (processID !== processCount.current) return;
+      if (snapshotID !== snapshotCount.current) return;
 
       const doc = docs[i];
       const rainarea = doc.data();
@@ -154,7 +153,7 @@ const App = () => {
 
       timeDiff = Date.now() - startTime;
       if (timeDiff > 200) {
-        console.log(`SNAPSHOT SECTION ${i}: ${timeDiff}ms`);
+        console.log(`SNAPSHOT SECTION ${snapshotID}: ${timeDiff}ms`);
         await pTimeout();
         startTime = Date.now();
       }
@@ -173,7 +172,7 @@ const App = () => {
 
         timeDiff = Date.now() - startTime;
         if (timeDiff > 200) {
-          console.log(`SNAPSHOT SECTION ${i}: ${timeDiff}ms`);
+          console.log(`SNAPSHOT SECTION ${snapshotID}: ${timeDiff}ms`);
           await pTimeout();
           startTime = Date.now();
         }
@@ -181,10 +180,10 @@ const App = () => {
     }
 
     timeDiff = Date.now() - startTime;
-    console.log(`SNAPSHOT SECTION last: ${timeDiff}ms`);
+    console.log(`SNAPSHOT SECTION ${snapshotID}: ${timeDiff}ms`);
 
     InteractionManager.runAfterInteractions(() => {
-      if (processID !== processCount.current) return;
+      if (snapshotID !== snapshotCount.current) return;
       const startTime = Date.now();
       setSnapshots(shots);
       const collection = featureCollection(geoJSONList);
@@ -195,7 +194,8 @@ const App = () => {
   };
 
   const onSnapshot = s => {
-    console.log('SNAPSHOT TIME', first.current, new Date());
+    const snapshotID = ++snapshotCount.current;
+    console.log('SNAPSHOT', snapshotID, first.current);
     setLoading(true);
     if (first.current) {
       const firstDoc = s.docs[0];
@@ -209,7 +209,7 @@ const App = () => {
       setRainRadarGeoJSON(collection);
     }
     InteractionManager.runAfterInteractions(() => {
-      processSnapshots(s);
+      processSnapshots(snapshotID, s);
     });
     first.current = false;
   };
