@@ -13,7 +13,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBOutlet weak var radarImage: UIImageView!
     @IBOutlet weak var loader: UIActivityIndicatorView!
   
-    let radarImageURL = "https://rainshot.now.sh/"
+    let radarImageURL = "https://rainshot.now.sh/api/radar"
 
     var timer = Timer()
   
