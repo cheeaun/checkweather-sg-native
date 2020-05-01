@@ -17,7 +17,7 @@
     "@react-native-firebase/app": "~6.7.1",
     "@react-native-firebase/firestore": "~6.7.1",
     "@react-native-firebase/messaging": "~6.7.1",
-    "@react-native-mapbox-gl/maps": "~8.0.0",
+    "@react-native-mapbox-gl/maps": "8.1.0-beta.1",
     "@turf/helpers": "~6.1.4",
     "appcenter": "3.0.2",
     "appcenter-analytics": "3.0.2",
