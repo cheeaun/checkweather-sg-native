@@ -7,43 +7,36 @@
 
 import UIKit
 import NotificationCenter
+import Kingfisher
 
 class TodayViewController: UIViewController, NCWidgetProviding {
   
     @IBOutlet weak var radarImage: UIImageView!
-    @IBOutlet weak var loader: UIActivityIndicatorView!
   
     let radarImageURL = "https://rainshot.now.sh/api/radar"
 
     var timer = Timer()
   
     func loadImage() {
-        self.loader.startAnimating()
+        let imageUrl = URL(string: self.radarImageURL)
+        self.radarImage.kf.setImage(with: imageUrl, options: [
+          .transition(.fade(1)),
+          .forceTransition,
+          .keepCurrentImageWhileLoading
+        ])
         
-        DispatchQueue.global().async {
-            let imageUrl = URL(string: self.radarImageURL)
-            let imageData = try? Data(contentsOf: imageUrl!)
-            if let image = imageData {
-                DispatchQueue.main.async {
-                    self.radarImage.image = UIImage(data: image)
-                }
-                
-                // Logging
-                let date = Date()
-                let formatter = DateFormatter()
-                formatter.dateFormat = "HH:mm:ss a"
-                let time = formatter.string(from: date)
-                print("\(time) \(image.count)")
-            }
-            DispatchQueue.main.async {
-                self.loader.stopAnimating()
-            }
-        }
+        #if DEBUG
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss a"
+        let time = formatter.string(from: date)
+        print("\(time)")
+        #endif
     }
   
     func renderImage() {
         self.loadImage()
-        timer = Timer.scheduledTimer(withTimeInterval: 120, repeats: true) { timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { timer in
           self.loadImage();
         }
         RunLoop.main.add(timer, forMode: .common)
@@ -52,6 +45,13 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     override func viewDidLoad() {
         super.viewDidLoad()
         extensionContext?.widgetLargestAvailableDisplayMode = .expanded
+      
+        self.radarImage.kf.indicatorType = .activity
+      
+        let cache = ImageCache.default
+        cache.memoryStorage.config.countLimit = 2
+        cache.memoryStorage.config.expiration = .seconds(59)
+        cache.diskStorage.config.expiration = .seconds(59)
     }
   
     override func viewWillAppear(_ animated: Bool) {
@@ -62,7 +62,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
-        self.loader.stopAnimating()
     }
   
     func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {

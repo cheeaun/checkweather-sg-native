@@ -376,6 +376,9 @@ PODS:
     - gRPC-Core/Interface (= 1.21.0)
     - nanopb (~> 0.3)
   - gRPC-Core/Interface (1.21.0)
+  - Kingfisher (5.13.4):
+    - Kingfisher/Core (= 5.13.4)
+  - Kingfisher/Core (5.13.4)
   - leveldb-library (1.22)
   - Mapbox-iOS-SDK (5.8.0):
     - MapboxMobileEvents (= 0.10.2)
@@ -701,6 +704,7 @@ DEPENDENCIES:
   - FlipperKit/SKIOSNetworkPlugin (~> 0.33.1)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - Kingfisher (~> 5.0)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -778,6 +782,7 @@ SPEC REPOS:
     - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
+    - Kingfisher
     - leveldb-library
     - Mapbox-iOS-SDK
     - MapboxMobileEvents
@@ -945,6 +950,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: ad0f3b691c67909d03a3327cc205222ab8f42e0e
   "gRPC-C++": 9dfe7b44821e7b3e44aacad2af29d2c21f7cde83
   gRPC-Core: c9aef9a261a1247e881b18059b84d597293c9947
+  Kingfisher: d2279a7abece3c7f25a80cd2b7f363ca5cf3f44c
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   Mapbox-iOS-SDK: 02590a60fe300810c55432219a0caaa1338fbafb
   MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
@@ -993,6 +999,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: b8402f33ab4c897591183ec1eece2fa65216e453
+PODFILE CHECKSUM: 6d2efaa810e5a5c1a9299273ea9806058a58735d
 
 COCOAPODS: 1.8.4

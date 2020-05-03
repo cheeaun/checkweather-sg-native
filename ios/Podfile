@@ -108,4 +108,5 @@ target 'NotificationService' do
 end
 
 target 'TodayExtension' do
+  pod 'Kingfisher', '~> 5.0'
 end
