@@ -131,11 +131,15 @@ export default StyleSheet.create({
   },
   lineDivider: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: 'rgba(255,255,255,.3)',
+    backgroundColor: 'rgba(255,255,255,.15)',
     marginVertical: 8,
   },
   largeDivider: {
     height: 8,
     backgroundColor: 'rgba(0,0,0,.2)',
+  },
+  menuDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: 'rgba(255,255,255,.15)',
   },
 });

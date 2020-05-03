@@ -120,8 +120,6 @@ const SheetBlock = ({
   top = false,
   bottom = false,
   small = false,
-  onPress,
-  children,
   ...props
 }) => {
   const safeArea = useSafeArea();
@@ -134,23 +132,48 @@ const SheetBlock = ({
     paddingLeft: Math.max(20, safeArea.left),
     paddingRight: Math.max(20, safeArea.right),
   };
+  return <View style={styles} {...props} />;
+};
 
-  if (onPress) {
-    return (
+const SheetMenu = ({
+  onPress,
+  isBottom = false,
+  isLink = false,
+  children,
+  ...props
+}) => {
+  const safeArea = useSafeArea();
+  const left = Math.max(20, safeArea.left);
+  const s = {
+    paddingVertical: 16,
+    paddingLeft: left,
+    paddingRight: Math.max(20, safeArea.right),
+  };
+  return (
+    <>
       <TouchableHighlight
-        style={styles}
-        underlayColor="rgba(255,255,255,.05)"
+        style={s}
+        underlayColor="rgba(255,255,255,.15)"
         onPress={onPress}
         {...props}
       >
-        <>{children}</>
+        <Text
+          style={[
+            styles.text,
+            styles.textLarge,
+            isLink && { color: '#1684ff' },
+          ]}
+        >
+          {children}
+        </Text>
       </TouchableHighlight>
-    );
-  }
-  return (
-    <View style={styles} {...props}>
-      {children}
-    </View>
+      {!isBottom && (
+        <View
+          pointerEvents="none"
+          style={[styles.menuDivider, { marginLeft: left, marginTop: -1 }]}
+        />
+      )}
+    </>
   );
 };
 
@@ -174,7 +197,7 @@ export default ({ onClose, ...props }) => {
       style={{
         borderRadius: 15,
         maxWidth: Math.min(480, windowWidth),
-        maxHeight: '55%',
+        maxHeight: '65%',
       }}
     >
       <TouchableOpacity
@@ -270,41 +293,35 @@ export default ({ onClose, ...props }) => {
           </View>
         </SheetBlock>
         <View style={styles.largeDivider} />
-        <SheetBlock
-          onPress={() => Linking.openURL('https://twitter.com/checkweathersg')}
-        >
-          <View style={styles.row}>
-            <Text
-              style={[
-                styles.grow,
-                styles.text,
-                styles.textLarge,
-                { color: '#1DA1F2' },
-              ]}
-            >
-              Follow @checkweathersg
-            </Text>
-            <Image
-              style={{
-                width: 20,
-                height: 20,
-                marginHorizontal: 2,
-              }}
-              resizeMode="contain"
-              source={{ uri: 'twitter' }}
-            />
-          </View>
-        </SheetBlock>
+        <View>
+          <SheetMenu
+            isLink
+            onPress={() => Linking.openURL('https://twitter.com/cheeaun/')}
+          >
+            Made by @cheeaun
+          </SheetMenu>
+          <SheetMenu
+            isLink
+            onPress={() =>
+              Linking.openURL(
+                'https://github.com/cheeaun/checkweather-sg-native',
+              )
+            }
+          >
+            Open-sourced on GitHub
+          </SheetMenu>
+          <SheetMenu
+            isLink
+            isBottom
+            onPress={() =>
+              Linking.openURL('https://checkweather.sg/privacy-policy/')
+            }
+          >
+            Privacy Policy
+          </SheetMenu>
+        </View>
         <View style={styles.largeDivider} />
         <SheetBlock bottom>
-          <Text style={[styles.text, styles.textSmall]}>
-            Built by <Link href="https://twitter.com/cheeaun">@cheeaun</Link>.
-            Open-sourced on{' '}
-            <Link href="https://github.com/cheeaun/checkweather-sg-native">
-              GitHub
-            </Link>
-            .
-          </Text>
           <Text style={[styles.text, styles.textSmall]}>
             © <Link href="https://www.mapbox.com/about/maps/">Mapbox</Link> ©{' '}
             <Link href="http://www.openstreetmap.org/about/">
