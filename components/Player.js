@@ -5,7 +5,7 @@ import * as Haptics from 'expo-haptics';
 import nanomemoize from 'nano-memoize';
 
 import useInterval from 'react-use/lib/useInterval';
-import { useAppState } from '@react-native-community/hooks';
+import { useAppState, useLayout } from '@react-native-community/hooks';
 
 import BlurView from './UI/BlurView';
 
@@ -25,6 +25,43 @@ const convertRainID2Time = nanomemoize(id => {
   );
   return time;
 });
+
+const SliderText = ({ index, total, children }) => {
+  const { onLayout: onTextParentLayout, ...textParentLayout } = useLayout();
+  const { onLayout: onTextChildLayout, ...textChildLayout } = useLayout();
+  const timeOffsetRatio = index / total;
+  const timeX = useRef(new Animated.Value(0)).current;
+
+  timeX.setValue(
+    timeOffsetRatio * textParentLayout.width -
+      timeOffsetRatio * textChildLayout.width,
+  );
+
+  return (
+    <Animated.View
+      onLayout={onTextParentLayout}
+      style={{
+        transform: [{ translateX: timeX }],
+        flexDirection: 'row',
+      }}
+    >
+      <Text
+        onLayout={onTextChildLayout}
+        style={[
+          styles.text,
+          {
+            fontVariant: ['tabular-nums'],
+            textShadowColor: '#fff',
+            textShadowRadius: index === total ? 3 : 0,
+            opacity: index === total ? 1 : 0.7,
+          },
+        ]}
+      >
+        {children}
+      </Text>
+    </Animated.View>
+  );
+};
 
 export default ({
   snapshots = [],
@@ -173,21 +210,9 @@ export default ({
           )}
         </TouchableOpacity>
         <View style={styles.grow}>
-          <Text
-            style={[
-              styles.text,
-              {
-                fontVariant: ['tabular-nums'],
-                textAlign: 'center',
-                fontWeight: 'bold',
-                textShadowColor: '#fff',
-                textShadowRadius: index === snapshotsCount ? 3 : 0,
-                opacity: index === snapshotsCount ? 1 : 0.7,
-              },
-            ]}
-          >
+          <SliderText index={index} total={snapshotsCount}>
             {convertRainID2Time(id)}
-          </Text>
+          </SliderText>
           <Slider
             ref={sliderRef}
             onValueChange={v => {
