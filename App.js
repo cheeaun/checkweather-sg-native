@@ -222,7 +222,7 @@ const App = () => {
     }
     return () => {
       unsub();
-      first.current = false;
+      first.current = true;
     };
   }, [currentAppState === 'active']);
 
