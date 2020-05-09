@@ -83,11 +83,6 @@ const App = () => {
         const windDirs = [];
         const points = data.map(d => {
           const { id, lng, lat, ...props } = d;
-          // Special case for S121 overlapping with S23
-          if (id === 'S121') {
-            delete props.temp_celcius;
-            delete props.relative_humidity;
-          }
           if (props.wind_direction) {
             windDirs.push(props.wind_direction);
           }
