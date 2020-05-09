@@ -41,11 +41,18 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         }
         RunLoop.main.add(timer, forMode: .common)
     }
+
+    @objc func tap(_ sender: UITapGestureRecognizer) {
+        let appURL = NSURL(string: "checkweathersg://")
+        extensionContext?.open(appURL! as URL, completionHandler: nil)
+    }
       
     override func viewDidLoad() {
         super.viewDidLoad()
         extensionContext?.widgetLargestAvailableDisplayMode = .expanded
-      
+
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tap(_:))))
+
         self.radarImage.kf.indicatorType = .activity
       
         let cache = ImageCache.default
