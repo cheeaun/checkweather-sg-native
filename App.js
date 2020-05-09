@@ -28,7 +28,6 @@ import Player from './components/Player';
 import WindDirectionContext from './contexts/wind-direction';
 
 import meanAngleDeg from './utils/meanAngleDeg';
-import debounce from './utils/debounce';
 import testRadar from './utils/testRadar';
 import {
   convertRadar2Values,
@@ -187,14 +186,23 @@ const App = () => {
       const collection = featureCollection(geoJSONList);
       setRainRadarGeoJSON(collection);
       setLoading(false);
-      console.log(`RENDER GEOJSON: ${Date.now() - startTime}ms`);
+      first.current = false;
+      console.log(
+        `RENDER GEOJSON: ${Date.now() - startTime}ms - ${
+          shots[shots.length - 1].id
+        }`,
+      );
     });
   };
 
+  let snapshotTimeout = useRef(null);
   const onSnapshot = s => {
     const snapshotID = ++snapshotCount.current;
-    console.log('SNAPSHOT', snapshotID, first.current);
+    const { fromCache } = s.metadata;
+    console.log('SNAPSHOT', snapshotID, first.current, fromCache);
     setLoading(true);
+    clearTimeout(snapshotTimeout.current);
+
     if (first.current) {
       const firstDoc = s.docs[0];
       const radar = firstDoc.data().radar;
@@ -206,17 +214,21 @@ const App = () => {
       const collection = featureCollection(geojsons);
       setRainRadarGeoJSON(collection);
     }
-    InteractionManager.runAfterInteractions(() => {
-      processSnapshots(snapshotID, s);
-    });
-    first.current = false;
+    if (fromCache) {
+      snapshotTimeout.current = setTimeout(() => {
+        processSnapshots(snapshotID, s);
+      }, 1500);
+    } else {
+      InteractionManager.runAfterInteractions(() => {
+        processSnapshots(snapshotID, s);
+      });
+    }
   };
-  const debouncedOnSnapshot = debounce(onSnapshot, 300);
 
   useEffect(() => {
     let unsub = () => {};
     if (currentAppState === 'active') {
-      unsub = weatherDB.onSnapshot(debouncedOnSnapshot);
+      unsub = weatherDB.onSnapshot(onSnapshot);
     }
     return () => {
       unsub();
