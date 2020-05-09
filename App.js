@@ -94,7 +94,10 @@ const App = () => {
       });
   }, []);
   useEffect(showObservations, []);
-  useInterval(showObservations, 2 * 60 * 1000);
+  useInterval(
+    showObservations,
+    currentAppState === 'active' ? 2 * 60 * 1000 : null,
+  );
 
   const [snapshots, setSnapshots] = useState([]);
   const snapshotsCount = snapshots.length;
