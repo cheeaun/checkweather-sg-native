@@ -235,6 +235,7 @@ export default ({
               const roundIndex = Math.round(v);
               setIndex(roundIndex);
               setSliderValue(roundIndex);
+              setFwd(false);
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }}
             minimumValue={1}
