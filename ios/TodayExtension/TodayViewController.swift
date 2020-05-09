@@ -12,30 +12,68 @@ import Kingfisher
 class TodayViewController: UIViewController, NCWidgetProviding {
   
     @IBOutlet weak var radarImage: UIImageView!
-  
+
     let radarImageURL = "https://rainshot.now.sh/api/radar"
 
     var timer = Timer()
-  
-    func loadImage() {
-        let imageUrl = URL(string: self.radarImageURL)
-        self.radarImage.kf.setImage(with: imageUrl, options: [
-          .transition(.fade(1)),
-          .forceTransition,
-          .keepCurrentImageWhileLoading
-        ])
-        
+
+    let cache = ImageCache.default
+    
+    func debugImage() {
         #if DEBUG
         let date = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss a"
         let time = formatter.string(from: date)
-        print("\(time)")
+        print("Load Image: \(time)")
         #endif
     }
+    
+    func loadImage() {
+        let imageUrl = URL(string: self.radarImageURL)
+        self.radarImage.kf.setImage(with: imageUrl, options: [
+            .fromMemoryCacheOrRefresh,
+            .transition(.fade(1)),
+            .keepCurrentImageWhileLoading
+        ])
+        
+        self.debugImage()
+    }
+
+    func loadNextImage() {
+        let cacheType = cache.imageCachedType(forKey: self.radarImageURL)
+        #if DEBUG
+        print("Cache Type: \(cacheType)")
+        #endif
+
+        let imageUrl = URL(string: self.radarImageURL)
+        if cacheType == .disk {
+            cache.retrieveImageInDiskCache(forKey: self.radarImageURL) { result in
+                switch result {
+                    case .success(let image):
+                        DispatchQueue.main.async {
+                            self.radarImage.kf.setImage(
+                                with: imageUrl,
+                                placeholder: image,
+                                options: [
+                                    .forceRefresh,
+                                    .transition(.fade(1)),
+                                    .keepCurrentImageWhileLoading
+                                ]
+                            )
+                        }
+                    case .failure(_):
+                        self.loadImage()
+                }
+            }
+        } else {
+            self.loadImage()
+        }
+        
+        self.debugImage()
+    }
   
-    func renderImage() {
-        self.loadImage()
+    func loadImageInterval() {
         timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { timer in
           self.loadImage();
         }
@@ -54,18 +92,20 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tap(_:))))
 
         self.radarImage.kf.indicatorType = .activity
-      
-        let cache = ImageCache.default
-        cache.memoryStorage.config.countLimit = 2
-        cache.memoryStorage.config.expiration = .seconds(59)
-        cache.diskStorage.config.expiration = .seconds(59)
+        
+        self.cache.memoryStorage.config.countLimit = 2
+        self.cache.memoryStorage.config.expiration = .seconds(59)
+//        self.cache.diskStorage.config.expiration = .seconds(900)
+        
+        print("viewDidLoad")
+        self.loadNextImage()
     }
   
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.renderImage()
+        self.loadImageInterval()
     }
-  
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
@@ -75,7 +115,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         let expanded = activeDisplayMode == .expanded
         preferredContentSize = expanded ? CGSize(width: maxSize.width, height: 200) : maxSize
     }
-        
+    
     func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
         // Perform any setup necessary in order to update the view.
         
