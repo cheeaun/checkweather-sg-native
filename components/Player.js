@@ -254,6 +254,11 @@ export default ({
               {convertRainID2Time(snapshots[0].id)}
             </Text>
             <Text style={[styles.text, styles.textSmall]}>
+              {convertRainID2Time(
+                snapshots[Math.round(snapshotsCount / 2) - 1].id,
+              )}
+            </Text>
+            <Text style={[styles.text, styles.textSmall]}>
               {convertRainID2Time(snapshots[snapshotsCount - 1].id)}
             </Text>
           </View>
