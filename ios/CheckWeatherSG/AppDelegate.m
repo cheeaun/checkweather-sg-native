@@ -94,6 +94,11 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 }
 
+// https://github.com/invertase/react-native-firebase/issues/3563#issuecomment-623646581
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [[UNUserNotificationCenter currentNotificationCenter] removeAllDeliveredNotifications];
+}
+
 - (BOOL)application:(UIApplication *)application
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
