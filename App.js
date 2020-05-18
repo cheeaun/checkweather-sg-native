@@ -208,22 +208,22 @@ const App = () => {
     setLoading(true);
     clearTimeout(snapshotTimeout.current);
 
-    if (first.current) {
-      const firstDoc = s.docs[0];
-      const radar = firstDoc.data().radar;
-      const values = convertRadar2Values(
-        firstDoc.id,
-        TEST_RADAR ? testRadar() : radar,
-      );
-      const geojsons = convertValues2GeoJSON(firstDoc.id, values);
-      const collection = featureCollection(geojsons);
-      setRainRadarGeoJSON(collection);
-    }
     if (fromCache) {
       snapshotTimeout.current = setTimeout(() => {
         processSnapshots(snapshotID, s);
       }, 1500);
     } else {
+      if (first.current) {
+        const firstDoc = s.docs[0];
+        const radar = firstDoc.data().radar;
+        const values = convertRadar2Values(
+          firstDoc.id,
+          TEST_RADAR ? testRadar() : radar,
+        );
+        const geojsons = convertValues2GeoJSON(firstDoc.id, values);
+        const collection = featureCollection(geojsons);
+        setRainRadarGeoJSON(collection);
+      }
       InteractionManager.runAfterInteractions(() => {
         processSnapshots(snapshotID, s);
       });
