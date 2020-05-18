@@ -18,6 +18,12 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5iM-Kq-clv" userLabel="radarImage">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="177"/>
                             </imageView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Couldn't Load Rain Radar" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gbr-hN-sID" userLabel="loadErrorLabel">
+                                <rect key="frame" x="64" y="78" width="193" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="5iM-Kq-clv" secondAttribute="bottom" id="2JP-Gv-wN8"/>
@@ -31,6 +37,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="177"/>
                     <connections>
+                        <outlet property="loadErrorLabel" destination="Gbr-hN-sID" id="aMl-Vq-N5h"/>
                         <outlet property="radarImage" destination="5iM-Kq-clv" id="mRC-3m-ktC"/>
                     </connections>
                 </viewController>

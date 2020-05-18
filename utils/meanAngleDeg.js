@@ -3,6 +3,7 @@ const sum = arr => arr.reduce((a, b) => a + b, 0);
 const degToRad = a => (Math.PI / 180) * a;
 const meanAngleDeg = arr => {
   const len = arr.length;
+  if (!len) return 0;
   return (
     (180 / Math.PI) *
     Math.atan2(

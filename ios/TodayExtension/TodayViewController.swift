@@ -12,6 +12,7 @@ import Kingfisher
 class TodayViewController: UIViewController, NCWidgetProviding {
   
     @IBOutlet weak var radarImage: UIImageView!
+    @IBOutlet weak var loadErrorLabel: UILabel!
 
     let radarImageURL = "https://rainshot.now.sh/api/radar"
 
@@ -30,17 +31,28 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
     
     func loadImage() {
+        self.loadErrorLabel.isHidden = true
         let imageUrl = URL(string: self.radarImageURL)
         self.radarImage.kf.setImage(with: imageUrl, options: [
             .fromMemoryCacheOrRefresh,
             .transition(.fade(1)),
             .keepCurrentImageWhileLoading
-        ])
+        ]) { result in
+            switch result {
+            case .success(_): break
+            case .failure(_):
+                #if DEBUG
+                print("Image load FAIL")
+                #endif
+                self.loadErrorLabel.isHidden = false
+            }
+        }
         
         self.debugImage()
     }
 
     func loadNextImage() {
+        self.loadErrorLabel.isHidden = true
         let cacheType = cache.imageCachedType(forKey: self.radarImageURL)
         #if DEBUG
         print("Cache Type: \(cacheType)")
@@ -60,7 +72,16 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                                     .transition(.fade(1)),
                                     .keepCurrentImageWhileLoading
                                 ]
-                            )
+                            ) { result in
+                                switch result {
+                                case .success(_): break
+                                case .failure(_):
+                                    #if DEBUG
+                                    print("Image load FAIL")
+                                    #endif
+                                    self.loadErrorLabel.isHidden = false
+                                }
+                            }
                         }
                     case .failure(_):
                         self.loadImage()

@@ -216,6 +216,8 @@ PODS:
     - React-Core (= 0.62.2)
     - React-jsi (= 0.62.2)
     - ReactCommon/turbomodule/core (= 0.62.2)
+  - Firebase/Analytics (6.13.0):
+    - Firebase/Core
   - Firebase/Core (6.13.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 6.1.6)
@@ -571,6 +573,8 @@ PODS:
     - "@react-native-mapbox-gl-mapbox-static (~> 5.8)"
     - Mapbox-iOS-SDK (~> 5.8)
     - React
+  - react-native-netinfo (5.8.1):
+    - React
   - react-native-slider (2.0.9):
     - React
   - React-RCTActionSheet (0.62.2):
@@ -632,26 +636,25 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
     - ReactCommon/callinvoker (= 0.62.2)
-  - RNFBApp (6.7.1):
-    - Firebase/Core (~> 6.13.0)
+  - RNFBApp (7.0.1):
+    - Firebase/CoreOnly (~> 6.13.0)
     - React
-  - RNFBFirestore (6.7.1):
-    - Firebase/Core (~> 6.13.0)
+  - RNFBFirestore (7.0.1):
     - Firebase/Firestore (~> 6.13.0)
     - React
     - RNFBApp
-  - RNFBMessaging (6.7.1):
-    - Firebase/Core (~> 6.13.0)
+  - RNFBMessaging (7.0.1):
+    - Firebase/Analytics (~> 6.13.0)
     - Firebase/Messaging (~> 6.13.0)
     - React
     - RNFBApp
   - RNStaticSafeAreaInsets (2.1.0):
     - React
-  - UMAppLoader (1.0.1)
+  - UMAppLoader (1.0.2)
   - UMBarCodeScannerInterface (5.1.0)
   - UMCameraInterface (5.1.0)
   - UMConstantsInterface (5.1.0)
-  - UMCore (5.1.0)
+  - UMCore (5.1.2)
   - UMFaceDetectorInterface (5.1.0)
   - UMFileSystemInterface (5.1.0)
   - UMFontInterface (5.1.0)
@@ -718,6 +721,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - "react-native-mapbox-gl (from `../node_modules/@react-native-mapbox-gl/maps`)"
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -844,6 +848,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/blur"
   react-native-mapbox-gl:
     :path: "../node_modules/@react-native-mapbox-gl/maps"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-slider:
     :path: "../node_modules/@react-native-community/slider"
   React-RCTActionSheet:
@@ -968,6 +974,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-mapbox-gl: 0a688ca4060ac73e11ed928c2f9a7b70b4665f99
+  react-native-netinfo: ae21a6ab293d6c75af0c17c562ef37a931218886
   react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
@@ -979,15 +986,15 @@ SPEC CHECKSUMS:
   React-RCTText: fae545b10cfdb3d247c36c56f61a94cfd6dba41d
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
-  RNFBApp: 7b539bb25520fa73d6a240f5c6ea569e27683645
-  RNFBFirestore: 23757ad7c33d81587a5d7d7d77f3ea22a1103372
-  RNFBMessaging: c55142d3b2d34d706bf12bd5eef9ef35254c2df1
+  RNFBApp: 78294eaec65c393c599db5b691a64a4d5f5e5a8d
+  RNFBFirestore: 5a9cc8dc4d069d070776d046b83c642a02e8bd23
+  RNFBMessaging: 0d9f1fff6359f97fac479aeae62ba79d2f069178
   RNStaticSafeAreaInsets: 5a2652147cfff45100fb155da5a90f180b3cdfb8
-  UMAppLoader: 83885655be9ce3e5b3684d20f9973da67b78b3a9
+  UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
   UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928
   UMConstantsInterface: 4a1d3062a89421d3290bbe8f75efabd849935bea
-  UMCore: db7c5b08deef44d881b9524e5ab39fd14bdc24fe
+  UMCore: cb544737bc72ecfccae9dd476e4d647468b4ebd0
   UMFaceDetectorInterface: c6d69c914426fc29f5a2442411a575e887adb823
   UMFileSystemInterface: bee6c9ca4f3d70da5f7c9752efc8b3f3a7f47b61
   UMFontInterface: 884955c5fd329095e2072d16de9b5bf1bce93005

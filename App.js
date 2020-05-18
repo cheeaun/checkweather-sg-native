@@ -3,6 +3,7 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
+  Text,
   StatusBar,
   useWindowDimensions,
   Alert,
@@ -17,6 +18,7 @@ import { useAppState } from '@react-native-community/hooks';
 import useInterval from 'react-use/lib/useInterval';
 import firestore from '@react-native-firebase/firestore';
 import { featureCollection, point } from '@turf/helpers';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 import RadarMap from './components/RadarMap';
 import BlurStatusBar from './components/BlurStatusBar';
@@ -91,7 +93,8 @@ const App = () => {
         setWindDirections(windDirs);
         const pointsCollection = featureCollection(points);
         setObservations(pointsCollection);
-      });
+      })
+      .catch(e => {});
   }, []);
   useEffect(showObservations, []);
   useInterval(
@@ -198,6 +201,7 @@ const App = () => {
 
   let snapshotTimeout = useRef(null);
   const onSnapshot = s => {
+    if (s.empty) return;
     const snapshotID = ++snapshotCount.current;
     const { fromCache } = s.metadata;
     console.log('SNAPSHOT', snapshotID, first.current, fromCache);
@@ -252,6 +256,8 @@ const App = () => {
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
+  const { isInternetReachable } = useNetInfo();
+
   return (
     <>
       <StatusBar barStyle="light-content" />
@@ -263,7 +269,20 @@ const App = () => {
         observationsSourceRef={observationsSourceRef}
         locationGranted={locationGranted}
       />
-      <BlurStatusBar />
+      <BlurStatusBar>
+        {!isInternetReachable && (
+          <View style={{ padding: 5 }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: 'rgba(255,255,255,.8)',
+              }}
+            >
+              No internet connection
+            </Text>
+          </View>
+        )}
+      </BlurStatusBar>
       <SafeAreaView style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <Animated.View
           style={[styles.flex, styles.relative, { opacity: mapCornersAnim }]}
