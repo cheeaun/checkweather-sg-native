@@ -12,6 +12,8 @@ import MapboxGL, {
 } from '@react-native-mapbox-gl/maps';
 import { featureCollection, polygon } from '@turf/helpers';
 
+import trackEvent from '../utils/trackEvent';
+
 import config from '../config.json';
 import styles from '../styles/global';
 import arrowDownImage from '../assets/arrow-down-white.png';
@@ -93,6 +95,12 @@ export default props => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         cameraRef.current.fitBounds(bounds.ne, bounds.sw, 0, 100);
       }
+    }
+    if (isUserInteraction) {
+      trackEvent('Map regiondidchange', {
+        zoom: mapZoom,
+        zoomState,
+      });
     }
   };
 

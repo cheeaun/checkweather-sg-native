@@ -34,6 +34,7 @@ import {
   convertValues2GeoJSON,
   genMidValues,
 } from './utils/radarUtils';
+import trackEvent from './utils/trackEvent';
 
 import styles from './styles/global';
 
@@ -244,6 +245,9 @@ const App = () => {
       toValue: showInfoSheet ? 0 : 300,
       duration: 300,
     }).start();
+    trackEvent('Info sheet', {
+      action: showInfoSheet ? 'open' : 'close',
+    });
   }, [showInfoSheet]);
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
@@ -283,6 +287,7 @@ const App = () => {
               <LocationButton
                 style={{ marginTop: 10 }}
                 onPress={async () => {
+                  trackEvent('User location button click');
                   if (locationAskAgain) {
                     const {
                       granted,

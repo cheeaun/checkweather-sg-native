@@ -24,6 +24,8 @@ import WindDirectionContext from '../contexts/wind-direction';
 
 import useSafeArea from '../hooks/useSafeArea';
 
+import trackEvent from '../utils/trackEvent';
+
 import intensityColors from '../intensity-colors.json';
 import arrowDownImage from '../assets/arrow-down-white.png';
 
@@ -95,6 +97,7 @@ const NotificationSwitch = () => {
         const on = !!v;
         setNotificationSubscribed(on);
         Settings.set({ notificationSubscribed: on });
+        trackEvent('Rain alerts', { action: on ? 'on' : 'off' });
         if (on) {
           const authorizationStatus = await messaging().requestPermission({
             alert: true,

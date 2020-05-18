@@ -9,6 +9,8 @@ import { useAppState, useLayout } from '@react-native-community/hooks';
 
 import BlurView from './UI/BlurView';
 
+import trackEvent from '../utils/trackEvent';
+
 import styles from '../styles/global';
 
 const convertRainID2Time = nanomemoize(id => {
@@ -185,6 +187,9 @@ export default ({
               setIndex(snapshotsCount);
               setSliderValue(snapshotsCount);
               setFwd(false);
+              trackEvent('Player button click', {
+                action: 'forward',
+              });
               return;
             }
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -192,12 +197,16 @@ export default ({
               setIndex(1);
             }
             setPlaying(!playing);
+            trackEvent('Player button click', {
+              action: playing ? 'pause' : 'play',
+            });
           }}
           onLongPress={() => {
             if (fwd || playing || index === snapshotsCount) return;
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             setIndex(snapshotsCount);
             setSliderValue(snapshotsCount);
+            trackEvent('Player button click', { action: 'forward' });
           }}
         >
           {fwd ? (
@@ -227,9 +236,10 @@ export default ({
               }
               setIndex(v);
             }}
-            onSlidingStart={() => {
+            onSlidingStart={v => {
               setPlaying(false);
               setFwd(false);
+              trackEvent('Slider', { action: 'start', value: v });
             }}
             onSlidingComplete={v => {
               const roundIndex = Math.round(v);
@@ -237,6 +247,7 @@ export default ({
               setSliderValue(roundIndex);
               setFwd(false);
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              trackEvent('Slider', { action: 'complete', value: v });
             }}
             minimumValue={1}
             maximumValue={snapshotsCount}
