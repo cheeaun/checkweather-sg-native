@@ -7,7 +7,7 @@ This is a native version of the [web app](https://github.com/cheeaun/checkweathe
 ## Setup
 
 1. `npm i`
-2. `cd ios && pod install`
+2. `npx pod-install`
 3. [Add](https://firebase.google.com/docs/ios/setup#add-config-file) `GoogleService-Info.plist` to root folder.
 4. `npm start`
 
