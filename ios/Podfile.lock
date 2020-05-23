@@ -199,6 +199,10 @@ PODS:
     - React-Core
     - UMCore
     - UMImageLoaderInterface
+  - EXImageManipulator (8.1.0):
+    - UMCore
+    - UMFileSystemInterface
+    - UMImageLoaderInterface
   - EXLinearGradient (8.1.0):
     - UMCore
   - EXLocation (8.1.0):
@@ -648,6 +652,8 @@ PODS:
     - Firebase/Messaging (~> 6.13.0)
     - React
     - RNFBApp
+  - RNShare (3.3.2):
+    - React
   - RNStaticSafeAreaInsets (2.1.0):
     - React
   - UMAppLoader (1.0.2)
@@ -680,6 +686,7 @@ DEPENDENCIES:
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXHaptics (from `../node_modules/expo-haptics/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
+  - EXImageManipulator (from `../node_modules/expo-image-manipulator/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
@@ -737,6 +744,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - RNShare (from `../node_modules/react-native-share`)
   - RNStaticSafeAreaInsets (from `../node_modules/react-native-static-safe-area-insets`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
@@ -812,6 +820,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-haptics/ios"
   EXImageLoader:
     :path: "../node_modules/expo-image-loader/ios"
+  EXImageManipulator:
+    :path: "../node_modules/expo-image-manipulator/ios"
   EXLinearGradient:
     :path: "../node_modules/expo-linear-gradient/ios"
   EXLocation:
@@ -878,6 +888,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   RNStaticSafeAreaInsets:
     :path: "../node_modules/react-native-static-safe-area-insets"
   UMAppLoader:
@@ -926,6 +938,7 @@ SPEC CHECKSUMS:
   EXFileSystem: b82693d78de152efe10a77d4aac781f782e10916
   EXHaptics: 3e6a4a40d87b230ffe1fafe298393ab6f3b8e10d
   EXImageLoader: 5c9d1bf408443ac4d4f44463eaf3b0d03bc70425
+  EXImageManipulator: 76857c4c37f983313cb7a8a2c0109e50d1005eb9
   EXLinearGradient: 8189387e3a65c2a9ba5507432e3a099ea8f7ea86
   EXLocation: 0397e4f11666d6ceb026b6424fdf66995c604964
   EXPermissions: d2cafee9c72578ecc9ca121481e6c4a04a798861
@@ -989,6 +1002,7 @@ SPEC CHECKSUMS:
   RNFBApp: 78294eaec65c393c599db5b691a64a4d5f5e5a8d
   RNFBFirestore: 5a9cc8dc4d069d070776d046b83c642a02e8bd23
   RNFBMessaging: 0d9f1fff6359f97fac479aeae62ba79d2f069178
+  RNShare: bd6518701db274b8ba282b33620885f2225a5bcf
   RNStaticSafeAreaInsets: 5a2652147cfff45100fb155da5a90f180b3cdfb8
   UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775

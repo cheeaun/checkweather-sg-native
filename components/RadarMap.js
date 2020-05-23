@@ -1,5 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import { useWindowDimensions } from 'react-native';
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
+import { useWindowDimensions, PixelRatio, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import MapboxGL, {
   MapView,
@@ -10,7 +16,9 @@ import MapboxGL, {
   FillLayer,
   SymbolLayer,
 } from '@react-native-mapbox-gl/maps';
-import { featureCollection, polygon } from '@turf/helpers';
+import { featureCollection, polygon, point } from '@turf/helpers';
+import Share from 'react-native-share';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 import trackEvent from '../utils/trackEvent';
 
@@ -59,7 +67,13 @@ const radarFillColor = [
   ...radarColors,
 ];
 
-export default props => {
+function pTimeout(t = 1) {
+  return new Promise((res, rej) => {
+    setTimeout(res, t);
+  });
+}
+
+export default forwardRef((props, ref) => {
   const {
     mapRef,
     cameraRef,
@@ -104,6 +118,13 @@ export default props => {
     }
   };
 
+  const [userLocationVisible, setUserLocationVisible] = useState(true);
+  const [rainTime, setRainTime] = useState('');
+  const [rainTimeVisible, setRainTimeVisible] = useState(false);
+  useImperativeHandle(ref, () => ({
+    setRainTime,
+  }));
+
   return (
     <MapView
       ref={mapRef}
@@ -114,6 +135,72 @@ export default props => {
       attributionEnabled={false}
       regionDidChangeDebounceTime={0}
       onRegionDidChange={onRegionDidChange}
+      onLongPress={async () => {
+        if (mapRef.current) {
+          // Prepration
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          cameraRef.current.fitBounds(bounds.ne, bounds.sw, 0, 0);
+          setUserLocationVisible(false);
+          setRainTimeVisible(true);
+          await pTimeout(150);
+
+          // Shot time
+          const snap = await mapRef.current.takeSnap(true);
+          console.log({ snap });
+          const snapURL = `file://${snap}`;
+
+          // Post-prep
+          setUserLocationVisible(true);
+          setRainTimeVisible(false);
+
+          // Shot manipulation
+          const [ne, sw] = await Promise.all([
+            mapRef.current.getPointInView(bounds.ne),
+            mapRef.current.getPointInView(bounds.sw),
+          ]);
+          console.log(ne, sw);
+          const pr = PixelRatio.get();
+          const image = await ImageManipulator.manipulateAsync(
+            snapURL,
+            [
+              {
+                crop: {
+                  originX: Math.round(sw[0] * pr),
+                  originY: Math.round(ne[1] * pr),
+                  width: Math.round((ne[0] - sw[0]) * pr),
+                  height: Math.round((sw[1] - ne[1]) * pr),
+                },
+              },
+            ],
+            {
+              compress: 0.8,
+              format: ImageManipulator.SaveFormat.JPEG,
+              base64: true,
+            },
+          );
+          console.log(image);
+          const url = image.uri;
+          const shareOptions = Platform.select({
+            ios: {
+              activityItemSources: [
+                {
+                  placeholderItem: { type: 'url', content: url },
+                  item: {
+                    default: { type: 'url', content: url },
+                  },
+                },
+              ],
+            },
+            default: {
+              url,
+              message: '',
+              type: 'image/jpeg',
+              failOnCancel: false,
+            },
+          });
+          Share.open(shareOptions).catch(e => {});
+        }
+      }}
     >
       <Camera
         ref={cameraRef}
@@ -235,6 +322,30 @@ export default props => {
           }}
         />
       </ShapeSource>
+      <ShapeSource
+        id="time"
+        tolerance={10}
+        buffer={0}
+        shape={point([upperLong, lowerLat], {
+          text: rainTime,
+        })}
+      >
+        <SymbolLayer
+          id="time-text"
+          style={{
+            textOpacity: rainTimeVisible ? 1 : 0,
+            textField: '{text}',
+            textIgnorePlacement: true,
+            textSize: 16,
+            textColor: '#fff',
+            textHaloColor: 'rgba(255,255,255,.5)',
+            textHaloWidth: 1,
+            textHaloBlur: 1,
+            textAnchor: 'bottom-right',
+            textTranslate: [-16, -16],
+          }}
+        />
+      </ShapeSource>
       <ShapeSource id="box" tolerance={10} buffer={0} shape={bboxGeoJSON}>
         <FillLayer
           id="bbox"
@@ -245,8 +356,12 @@ export default props => {
         />
       </ShapeSource>
       {locationGranted && (
-        <UserLocation showsUserHeadingIndicator renderMode="native" />
+        <UserLocation
+          visible={userLocationVisible}
+          showsUserHeadingIndicator
+          renderMode="native"
+        />
       )}
     </MapView>
   );
-};
+});

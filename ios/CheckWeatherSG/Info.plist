@@ -35,6 +35,19 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>facebook</string>
+		<string>facebook-stories</string>
+		<string>pagesmanager</string>
+		<string>twitter</string>
+		<string>whatsapp</string>
+		<string>instagram</string>
+		<string>instagram-stories</string>
+		<string>email</string>
+		<string>pinterest</string>
+		<string>linkedin</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
@@ -54,6 +67,8 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your current location will be displayed on the map.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Allow saving radar image to your Photo Library.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

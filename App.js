@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   Text,
-  StatusBar,
   useWindowDimensions,
   Alert,
   Linking,
@@ -37,6 +36,7 @@ import {
   genMidValues,
 } from './utils/radarUtils';
 import trackEvent from './utils/trackEvent';
+import convertRainID2Time from './utils/convertRainID2Time';
 
 import styles from './styles/global';
 
@@ -108,6 +108,7 @@ const App = () => {
   const rainRadarLayerRef = useRef(null);
   const mapRef = useRef(null);
   const cameraRef = useRef(null);
+  const radarMapRef = useRef(null);
 
   const setRainRadarFilterID = (id, index) => {
     if (id && rainRadarLayerRef.current) {
@@ -118,6 +119,9 @@ const App = () => {
     if (index && mapRef.current) {
       const obsVisibility = index >= snapshotsCount - 1;
       mapRef.current.setSourceVisibility(obsVisibility, 'observations');
+    }
+    if (id && radarMapRef.current) {
+      radarMapRef.current.setRainTime(convertRainID2Time(id));
     }
   };
 
@@ -267,6 +271,7 @@ const App = () => {
         rainRadarLayerRef={rainRadarLayerRef}
         observationsSourceRef={observationsSourceRef}
         locationGranted={locationGranted}
+        ref={radarMapRef}
       />
       <BlurStatusBar>
         {!isInternetReachable && (
