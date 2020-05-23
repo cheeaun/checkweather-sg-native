@@ -260,7 +260,6 @@ const App = () => {
 
   return (
     <>
-      <StatusBar barStyle="light-content" />
       <RadarMap
         mapRef={mapRef}
         cameraRef={cameraRef}
