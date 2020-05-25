@@ -1,16 +1,3 @@
-diff --git a/ios/CheckWeatherSG.xcodeproj/xcshareddata/xcschemes/CheckWeatherSG.xcscheme b/ios/CheckWeatherSG.xcodeproj/xcshareddata/xcschemes/CheckWeatherSG.xcscheme
-index 08382af..b3c34b3 100644
---- a/ios/CheckWeatherSG.xcodeproj/xcshareddata/xcschemes/CheckWeatherSG.xcscheme
-+++ b/ios/CheckWeatherSG.xcodeproj/xcshareddata/xcschemes/CheckWeatherSG.xcscheme
-@@ -41,7 +41,7 @@
-       </Testables>
-    </TestAction>
-    <LaunchAction
--      buildConfiguration = "Debug"
-+      buildConfiguration = "Release"
-       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-       launchStyle = "0"
 diff --git a/ios/CheckWeatherSG/Info.plist b/ios/CheckWeatherSG/Info.plist
 index 6c16b03..74b6c8e 100644
 --- a/ios/CheckWeatherSG/Info.plist
