@@ -17,11 +17,11 @@
   "dependencies": {
     "@react-native-community/blur": "~3.6.0",
     "@react-native-community/hooks": "~2.5.1",
-    "@react-native-community/netinfo": "~5.8.1",
+    "@react-native-community/netinfo": "~5.9.0",
     "@react-native-community/slider": "~2.0.9",
-    "@react-native-firebase/app": "~7.0.1",
-    "@react-native-firebase/firestore": "~7.0.1",
-    "@react-native-firebase/messaging": "~7.0.1",
+    "@react-native-firebase/app": "~7.1.0",
+    "@react-native-firebase/firestore": "~7.1.0",
+    "@react-native-firebase/messaging": "~7.1.0",
     "@react-native-mapbox-gl/maps": "8.1.0-beta.1",
     "@turf/helpers": "~6.1.4",
     "appcenter": "3.0.2",
@@ -40,7 +40,7 @@
     "react-native-share": "~3.3.2",
     "react-native-static-safe-area-insets": "~2.1.0",
     "react-native-unimodules": "~0.9.1",
-    "react-use": "~15.0.1"
+    "react-use": "~15.1.0"
   },
   "devDependencies": {
     "@babel/core": "~7.6.2",
