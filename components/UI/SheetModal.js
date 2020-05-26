@@ -26,12 +26,7 @@ export default forwardRef(({ children, ...props }, ref) => {
       onLayout={e => {
         if (e && e.layout) setModalHeight(e.layout.height);
       }}
-    >
-      <BlurView
-        style={{
-          borderRadius: 15,
-        }}
-      >
+      HeaderComponent={() => (
         <TouchableOpacity
           onPress={() => ref.current && ref.current.close()}
           style={{
@@ -45,7 +40,7 @@ export default forwardRef(({ children, ...props }, ref) => {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 30,
-            zIndex: 2,
+            zIndex: 9999,
           }}
         >
           <Text
@@ -58,6 +53,13 @@ export default forwardRef(({ children, ...props }, ref) => {
             ×
           </Text>
         </TouchableOpacity>
+      )}
+    >
+      <BlurView
+        style={{
+          borderRadius: 15,
+        }}
+      >
         {children}
       </BlurView>
     </Modalize>
