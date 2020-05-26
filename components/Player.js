@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { TouchableOpacity, View, Text, Animated, Easing } from 'react-native';
 import Slider from '@react-native-community/slider';
 import * as Haptics from 'expo-haptics';
-import nanomemoize from 'nano-memoize';
 
 import useInterval from 'react-use/lib/useInterval';
 import { useAppState, useLayout } from '@react-native-community/hooks';
