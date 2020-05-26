@@ -722,6 +722,8 @@ PODS:
     - Firebase/Messaging (~> 6.25.0)
     - React
     - RNFBApp
+  - RNGestureHandler (1.6.1):
+    - React
   - RNShare (3.3.2):
     - React
   - RNStaticSafeAreaInsets (2.1.0):
@@ -814,6 +816,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNShare (from `../node_modules/react-native-share`)
   - RNStaticSafeAreaInsets (from `../node_modules/react-native-static-safe-area-insets`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
@@ -960,6 +963,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNShare:
     :path: "../node_modules/react-native-share"
   RNStaticSafeAreaInsets:
@@ -1076,6 +1081,7 @@ SPEC CHECKSUMS:
   RNFBApp: 25a6476dfd7aac2bcbe984f569875bcea122895b
   RNFBFirestore: 2bfe418a0084956c90a26f65642808a00c869d88
   RNFBMessaging: ea4ce2a6466b3a6dfb46a8c28c38a7989da36a31
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNShare: bd6518701db274b8ba282b33620885f2225a5bcf
   RNStaticSafeAreaInsets: 5a2652147cfff45100fb155da5a90f180b3cdfb8
   UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913

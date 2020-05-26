@@ -12,7 +12,6 @@ import {
   InteractionManager,
 } from 'react-native';
 import * as Location from 'expo-location';
-import Modal from 'react-native-modal';
 import { useAppState } from '@react-native-community/hooks';
 import useInterval from 'react-use/lib/useInterval';
 import firestore from '@react-native-firebase/firestore';
@@ -25,6 +24,7 @@ import InfoSheet from './components/InfoSheet';
 import InfoButton from './components/InfoButton';
 import LocationButton from './components/LocationButton';
 import Player from './components/Player';
+import SheetModal from './components/UI/SheetModal';
 
 import WindDirectionContext from './contexts/wind-direction';
 
@@ -245,20 +245,8 @@ const App = () => {
     };
   }, [currentAppState === 'active']);
 
-  const [showInfoSheet, setShowInfoSheet] = useState(false);
+  const infoModalRef = useRef(null);
   const mapCornersAnim = useRef(new Animated.Value(1)).current;
-  useEffect(() => {
-    Animated.timing(mapCornersAnim, {
-      useNativeDriver: true,
-      toValue: showInfoSheet ? 0 : 300,
-      duration: 300,
-    }).start();
-    trackEvent('Info sheet', {
-      action: showInfoSheet ? 'open' : 'close',
-    });
-  }, [showInfoSheet]);
-
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   const { isInternetReachable } = useNetInfo();
 
@@ -305,7 +293,11 @@ const App = () => {
             style={[styles.mapCorner, styles.mapCornerTopRight]}
             pointerEvents="box-none"
           >
-            <InfoButton onPress={() => setShowInfoSheet(true)} />
+            <InfoButton
+              onPress={() =>
+                infoModalRef.current && infoModalRef.current.open()
+              }
+            />
             {!locationGranted && (
               <LocationButton
                 style={{ marginTop: 10 }}
@@ -354,25 +346,35 @@ const App = () => {
           </View>
         </Animated.View>
       </SafeAreaView>
-      <Modal
-        useNativeDriver
-        backdropOpacity={0.5}
-        isVisible={showInfoSheet}
-        hideModalContentWhileAnimating
-        onBackdropPress={() => {
-          setShowInfoSheet(false);
+      <SheetModal
+        ref={infoModalRef}
+        onOpen={() => {
+          Animated.timing(mapCornersAnim, {
+            useNativeDriver: true,
+            toValue: 0,
+            duration: 300,
+          }).start();
+          trackEvent('Info sheet', {
+            action: 'open',
+          });
         }}
-        style={{
-          justifyContent:
-            windowWidth > 500 && windowHeight > 500 ? 'center' : 'flex-end',
-          alignItems: 'center',
-          margin: 0,
+        onClose={() => {
+          Animated.timing(mapCornersAnim, {
+            useNativeDriver: true,
+            toValue: 1,
+            duration: 300,
+          }).start();
+          trackEvent('Info sheet', {
+            action: 'close',
+          });
         }}
       >
         <WindDirectionContext.Provider value={meanAngleDeg(windDirections)}>
-          <InfoSheet onClose={() => setShowInfoSheet(false)} />
+          <InfoSheet
+            onClose={() => infoModalRef.current && infoModalRef.current.close()}
+          />
         </WindDirectionContext.Provider>
-      </Modal>
+      </SheetModal>
     </>
   );
 };
