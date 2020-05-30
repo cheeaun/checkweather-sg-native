@@ -1,12 +1,14 @@
 diff --git a/ios/CheckWeatherSG/Info.plist b/ios/CheckWeatherSG/Info.plist
-index 6c16b03..74b6c8e 100644
+index b73f1cd..2f0eacc 100644
 --- a/ios/CheckWeatherSG/Info.plist
 +++ b/ios/CheckWeatherSG/Info.plist
-@@ -30,14 +30,6 @@
+@@ -55,15 +55,9 @@
+ 	<key>NSAppTransportSecurity</key>
  	<dict>
  		<key>NSAllowsArbitraryLoads</key>
- 		<true/>
--		<key>NSExceptionDomains</key>
+-		<true/>
++		<false/>
+ 		<key>NSExceptionDomains</key>
 -		<dict>
 -			<key>localhost</key>
 -			<dict>
@@ -14,6 +16,7 @@ index 6c16b03..74b6c8e 100644
 -				<true/>
 -			</dict>
 -		</dict>
++		<dict/>
  	</dict>
  	<key>NSLocationWhenInUseUsageDescription</key>
  	<string>Your current location will be displayed on the map.</string>
