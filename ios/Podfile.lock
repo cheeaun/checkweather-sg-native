@@ -213,14 +213,14 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
-  - appcenter-analytics (3.0.2):
+  - appcenter-analytics (3.0.3):
     - AppCenter/Analytics
     - AppCenterReactNativeShared
     - React
-  - appcenter-core (3.0.2):
+  - appcenter-core (3.0.3):
     - AppCenterReactNativeShared
     - React
-  - appcenter-crashes (3.0.2):
+  - appcenter-crashes (3.0.3):
     - AppCenter/Crashes
     - AppCenterReactNativeShared
     - React
@@ -647,9 +647,9 @@ PODS:
     - "@react-native-mapbox-gl-mapbox-static (~> 5.8)"
     - Mapbox-iOS-SDK (~> 5.8)
     - React
-  - react-native-netinfo (5.9.0):
+  - react-native-netinfo (5.9.2):
     - React
-  - react-native-slider (2.0.9):
+  - react-native-slider (3.0.0):
     - React
   - React-RCTActionSheet (0.62.2):
     - React-Core/RCTActionSheetHeaders (= 0.62.2)
@@ -1002,9 +1002,9 @@ SPEC CHECKSUMS:
   "@react-native-mapbox-gl-mapbox-static": e247172bc43f47757f47d6cec1b325b1ab3e9287
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
   AppCenter: 513d32888854d67d8cfbd3a8db16aeb5fb2e2a75
-  appcenter-analytics: f819aa9bd41c43b8b9ae53aa5dfd862b48a65f50
-  appcenter-core: 74a3db7d48a720fc3a70e0cf5cbda720decac008
-  appcenter-crashes: 0aea510872e4f9186553941b75ba0e9e6c7d9e07
+  appcenter-analytics: 4fdc885acb8a3bfac835515a8b9610d054ba8b9f
+  appcenter-core: 84a1c69361d10272bf08b2ff906c37f4e422b940
+  appcenter-crashes: e9008710be7612c585c39f3dc2cf3894172dc6e2
   AppCenterReactNativeShared: c4eb2ad593c32fbc2fc5f2ea9f5cf1faae61c182
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
@@ -1066,8 +1066,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-mapbox-gl: 0a688ca4060ac73e11ed928c2f9a7b70b4665f99
-  react-native-netinfo: 2beabb5930a15eef58093c66910cd5b733acc8dd
-  react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
+  react-native-netinfo: 9b9929fcfa4aabe92f49a9fb3f25394cc8721e87
+  react-native-slider: 05f11678260cb27c3d00a2dd1558b623be3ec8d2
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
   React-RCTBlob: a332773f0ebc413a0ce85942a55b064471587a71

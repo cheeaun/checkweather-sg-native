@@ -13,6 +13,7 @@ import messaging from '@react-native-firebase/messaging';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import Link from './UI/Link';
+import SheetBlock from './UI/SheetBlock';
 
 import styles from '../styles/global';
 import WindDirectionContext from '../contexts/wind-direction';
@@ -114,25 +115,6 @@ const NotificationSwitch = () => {
   );
 };
 
-const SheetBlock = ({
-  top = false,
-  bottom = false,
-  small = false,
-  ...props
-}) => {
-  const safeArea = useSafeArea();
-  const verticalPadding = small ? 10 : 20;
-  const styles = {
-    paddingTop: top ? Math.max(verticalPadding, safeArea.top) : verticalPadding,
-    paddingBottom: bottom
-      ? Math.max(verticalPadding, safeArea.bottom)
-      : verticalPadding,
-    paddingLeft: Math.max(20, safeArea.left),
-    paddingRight: Math.max(20, safeArea.right),
-  };
-  return <View style={styles} {...props} />;
-};
-
 const SheetMenu = ({
   onPress,
   isBottom = false,
@@ -175,7 +157,7 @@ const SheetMenu = ({
   );
 };
 
-export default ({ onClose, ...props }) => {
+export default () => {
   if (__DEV__) {
     useEffect(() => {
       messaging()

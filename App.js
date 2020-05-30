@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   Text,
-  useWindowDimensions,
   Alert,
   Linking,
   Animated,
@@ -14,17 +13,20 @@ import {
 import * as Location from 'expo-location';
 import { useAppState } from '@react-native-community/hooks';
 import useInterval from 'react-use/lib/useInterval';
+import useUnmount from 'react-use/lib/useUnmount';
 import firestore from '@react-native-firebase/firestore';
 import { featureCollection, point } from '@turf/helpers';
 import { useNetInfo } from '@react-native-community/netinfo';
+import * as Haptics from 'expo-haptics';
 
+import SheetModal from './components/UI/SheetModal';
 import RadarMap from './components/RadarMap';
 import BlurStatusBar from './components/BlurStatusBar';
 import InfoSheet from './components/InfoSheet';
 import InfoButton from './components/InfoButton';
 import LocationButton from './components/LocationButton';
 import Player from './components/Player';
-import SheetModal from './components/UI/SheetModal';
+import ShotSheet from './components/ShotSheet';
 
 import WindDirectionContext from './contexts/wind-direction';
 
@@ -36,7 +38,6 @@ import {
   genMidValues,
 } from './utils/radarUtils';
 import trackEvent from './utils/trackEvent';
-import convertRainID2Time from './utils/convertRainID2Time';
 
 import styles from './styles/global';
 
@@ -72,8 +73,9 @@ const App = () => {
 
   const observationsSourceRef = useRef(null);
   const setObservations = shape => {
-    if (observationsSourceRef.current) {
+    if (shape && observationsSourceRef.current) {
       observationsSourceRef.current.setNativeProps({ shape });
+      setShotDataRef('observationsShape', shape);
     }
   };
 
@@ -105,23 +107,27 @@ const App = () => {
   const [snapshots, setSnapshots] = useState([]);
   const snapshotsCount = snapshots.length;
 
+  const shotDataRef = useRef({});
+  const setShotDataRef = (k, v) => {
+    if (shotDataRef.current) {
+      shotDataRef.current[k] = v;
+    }
+  };
+
   const rainRadarLayerRef = useRef(null);
   const mapRef = useRef(null);
   const cameraRef = useRef(null);
-  const radarMapRef = useRef(null);
 
   const setRainRadarFilterID = (id, index) => {
     if (id && rainRadarLayerRef.current) {
       rainRadarLayerRef.current.setNativeProps({
         filter: ['==', 'id', id],
       });
+      setShotDataRef('id', id);
     }
     if (index && mapRef.current) {
       const obsVisibility = index >= snapshotsCount - 1;
       mapRef.current.setSourceVisibility(obsVisibility, 'observations');
-    }
-    if (id && radarMapRef.current) {
-      radarMapRef.current.setRainTime(convertRainID2Time(id));
     }
   };
 
@@ -129,6 +135,7 @@ const App = () => {
   const setRainRadarGeoJSON = shape => {
     if (shape && rainRadarSourceRef.current) {
       rainRadarSourceRef.current.setNativeProps({ shape });
+      setShotDataRef('rainRadarShape', shape);
     }
   };
 
@@ -191,6 +198,7 @@ const App = () => {
       if (snapshotID !== snapshotCount.current) return;
       const startTime = Date.now();
       setSnapshots(shots);
+      setShotDataRef('snapshots', shots);
       const collection = featureCollection(geoJSONList);
       setRainRadarGeoJSON(collection);
       setLoading(false);
@@ -246,7 +254,21 @@ const App = () => {
   }, [currentAppState === 'active']);
 
   const infoModalRef = useRef(null);
+  const shotModalRef = useRef(null);
+  const shotSheetRef = useRef(null);
+  useUnmount(() => {
+    infoModalRef.current && infoModalRef.current.close();
+    shotModalRef.current && shotModalRef.current.close();
+  });
+
   const mapCornersAnim = useRef(new Animated.Value(1)).current;
+  const setMapCornersVisible = visible => {
+    Animated.timing(mapCornersAnim, {
+      useNativeDriver: true,
+      toValue: visible ? 1 : 0,
+      duration: 300,
+    }).start();
+  };
 
   const { isInternetReachable } = useNetInfo();
 
@@ -259,7 +281,12 @@ const App = () => {
         rainRadarLayerRef={rainRadarLayerRef}
         observationsSourceRef={observationsSourceRef}
         locationGranted={locationGranted}
-        ref={radarMapRef}
+        onLongPress={() => {
+          if (snapshotsCount && shotModalRef.current) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            shotModalRef.current.open();
+          }
+        }}
       />
       <BlurStatusBar>
         {!isInternetReachable && (
@@ -348,32 +375,51 @@ const App = () => {
       </SafeAreaView>
       <SheetModal
         ref={infoModalRef}
+        showCloseButton
         onOpen={() => {
-          Animated.timing(mapCornersAnim, {
-            useNativeDriver: true,
-            toValue: 0,
-            duration: 300,
-          }).start();
+          setMapCornersVisible(false);
           trackEvent('Info sheet', {
             action: 'open',
           });
         }}
         onClose={() => {
-          Animated.timing(mapCornersAnim, {
-            useNativeDriver: true,
-            toValue: 1,
-            duration: 300,
-          }).start();
+          setMapCornersVisible(true);
           trackEvent('Info sheet', {
             action: 'close',
           });
         }}
       >
         <WindDirectionContext.Provider value={meanAngleDeg(windDirections)}>
-          <InfoSheet
-            onClose={() => infoModalRef.current && infoModalRef.current.close()}
-          />
+          <InfoSheet />
         </WindDirectionContext.Provider>
+      </SheetModal>
+      <SheetModal
+        ref={shotModalRef}
+        overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
+        onOpened={() => {
+          shotSheetRef.current &&
+            shotSheetRef.current.setData(shotDataRef.current);
+        }}
+        onOpen={() => {
+          setMapCornersVisible(false);
+          trackEvent('Shot sheet', {
+            action: 'open',
+          });
+        }}
+        onClose={() => {
+          setMapCornersVisible(true);
+          trackEvent('Shot sheet', {
+            action: 'close',
+          });
+        }}
+      >
+        <ShotSheet
+          ref={shotSheetRef}
+          locationGranted={locationGranted}
+          onClose={() => {
+            shotModalRef.current && shotModalRef.current.close();
+          }}
+        />
       </SheetModal>
     </>
   );
