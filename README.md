@@ -2,6 +2,11 @@
 
 > ☀️🌧 Yet another weather app for Singapore
 
+- Radar map from past 2 hours
+- Push notifications for rain alerts
+- Today widget showing rain radar map
+- Hidden gesture to share radar image
+
 This is a native version of the [web app](https://github.com/cheeaun/checkweather-sg).
 
 ## Setup
