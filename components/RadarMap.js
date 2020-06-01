@@ -79,7 +79,7 @@ export default ({
   const currentMapZoom = useRef(0);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const onRegionDidChange = async e => {
-    if (!mapRef.current || !currentMapZoom.current) return;
+    if (!mapRef.current) return;
     const mapZoom = await mapRef.current.getZoom();
     const diffZoom = mapZoom !== currentMapZoom.current;
     const zoomState = mapZoom > currentMapZoom.current ? 'in' : 'out';
