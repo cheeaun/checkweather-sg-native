@@ -44,6 +44,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                 #if DEBUG
                 print("Image load FAIL")
                 #endif
+                self.radarImage.image = nil
                 self.loadErrorLabel.isHidden = false
             }
         }
@@ -79,6 +80,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                                     #if DEBUG
                                     print("Image load FAIL")
                                     #endif
+                                    self.radarImage.image = nil
                                     self.loadErrorLabel.isHidden = false
                                 }
                             }
