@@ -4,19 +4,27 @@ import { Modalize } from 'react-native-modalize';
 import BlurView from './BlurView';
 
 export default forwardRef(
-  ({ showCloseButton = false, children, ...props }, ref) => {
+  (
+    {
+      showCloseButton = false,
+      adjustToContentHeight = true,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     const [modalHeight, setModalHeight] = useState(null);
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
     const largeWindow = windowWidth > 500 && windowHeight > 500;
 
     return (
       <Modalize
-        adjustToContentHeight
+        adjustToContentHeight={largeWindow ? true : adjustToContentHeight}
         overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        withHandle={!largeWindow}
         {...props}
         ref={ref}
         handlePosition="inside"
-        withHandle={!largeWindow}
         handleStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
         modalStyle={{
           backgroundColor: 'transparent',
@@ -58,13 +66,15 @@ export default forwardRef(
           ) : null
         }
       >
-        <BlurView
-          style={{
-            borderRadius: 15,
-          }}
-        >
-          {children}
-        </BlurView>
+        {children && (
+          <BlurView
+            style={{
+              borderRadius: 15,
+            }}
+          >
+            {children}
+          </BlurView>
+        )}
       </Modalize>
     );
   },

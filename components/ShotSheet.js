@@ -27,6 +27,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
 
 import SheetBlock from './UI/SheetBlock';
+import Button from './UI/Button';
 
 import convertRainID2Time from '../utils/convertRainID2Time';
 
@@ -223,14 +224,8 @@ export default forwardRef(
               )}
             </View>
           )}
-          <TouchableHighlight
-            underlayColor="#147aff"
-            style={{
-              backgroundColor: loading ? 'rgba(255,255,255,.1)' : '#1684ff',
-              borderRadius: 10,
-              padding: 16,
-              marginVertical: 10,
-            }}
+          <Button
+            loading={loading || exporting}
             disabled={loading || exporting}
             onPress={async () => {
               setExporting(true);
@@ -303,20 +298,8 @@ export default forwardRef(
               setExporting(false);
             }}
           >
-            {loading || exporting ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text
-                style={[
-                  styles.text,
-                  styles.textLarge,
-                  { fontWeight: 'bold', textAlign: 'center' },
-                ]}
-              >
-                Share
-              </Text>
-            )}
-          </TouchableHighlight>
+            Share
+          </Button>
         </SheetBlock>
       </>
     );

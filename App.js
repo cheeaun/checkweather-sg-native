@@ -9,6 +9,7 @@ import {
   Animated,
   ActivityIndicator,
   InteractionManager,
+  Settings,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { useAppState } from '@react-native-community/hooks';
@@ -27,6 +28,7 @@ import InfoButton from './components/InfoButton';
 import LocationButton from './components/LocationButton';
 import Player from './components/Player';
 import ShotSheet from './components/ShotSheet';
+import WelcomeSheet from './components/WelcomeSheet';
 
 import WindDirectionContext from './contexts/wind-direction';
 
@@ -257,8 +259,8 @@ const App = () => {
   const shotModalRef = useRef(null);
   const shotSheetRef = useRef(null);
   useUnmount(() => {
-    infoModalRef.current && infoModalRef.current.close();
-    shotModalRef.current && shotModalRef.current.close();
+    infoModalRef.current?.close();
+    shotModalRef.current?.close();
   });
 
   const mapCornersAnim = useRef(new Animated.Value(1)).current;
@@ -269,6 +271,12 @@ const App = () => {
       duration: 300,
     }).start();
   };
+
+  const welcomeModalRef = useRef(null);
+  const welcomeOpened = !!Settings.get('welcomeOpened');
+  useEffect(() => {
+    if (!welcomeOpened) welcomeModalRef.current?.open();
+  }, []);
 
   const { isInternetReachable } = useNetInfo();
 
@@ -282,9 +290,9 @@ const App = () => {
         observationsSourceRef={observationsSourceRef}
         locationGranted={locationGranted}
         onLongPress={() => {
-          if (snapshotsCount && shotModalRef.current) {
+          if (snapshotsCount) {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            shotModalRef.current.open();
+            shotModalRef.current?.open();
           }
         }}
       />
@@ -320,11 +328,7 @@ const App = () => {
             style={[styles.mapCorner, styles.mapCornerTopRight]}
             pointerEvents="box-none"
           >
-            <InfoButton
-              onPress={() =>
-                infoModalRef.current && infoModalRef.current.open()
-              }
-            />
+            <InfoButton onPress={() => infoModalRef.current?.open()} />
             {!locationGranted && (
               <LocationButton
                 style={{ marginTop: 10 }}
@@ -417,10 +421,40 @@ const App = () => {
           ref={shotSheetRef}
           locationGranted={locationGranted}
           onClose={() => {
-            shotModalRef.current && shotModalRef.current.close();
+            shotModalRef.current?.close();
           }}
         />
       </SheetModal>
+      {!welcomeOpened && (
+        <SheetModal
+          ref={welcomeModalRef}
+          adjustToContentHeight={false}
+          panGestureEnabled={false}
+          closeOnOverlayTap={false}
+          withHandle={false}
+          customRenderer={
+            <WelcomeSheet
+              onClose={() => {
+                welcomeModalRef.current?.close();
+              }}
+            />
+          }
+          childrenStyle={{
+            flexDirection: 'row',
+          }}
+          onOpen={() => {
+            trackEvent('Welcome sheet', {
+              action: 'open',
+            });
+          }}
+          onClose={() => {
+            Settings.set({ welcomeOpened: true });
+            trackEvent('Welcome sheet', {
+              action: 'close',
+            });
+          }}
+        />
+      )}
     </>
   );
 };
