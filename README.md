@@ -15,10 +15,12 @@ This is a native mobile app version of the [web app](https://github.com/cheeaun/
 
 ## Setup
 
-1. `npm i`
-2. `npx pod-install`
-3. [Add `GoogleService-Info.plist`](https://firebase.google.com/docs/ios/setup#add-config-file) to root folder.
-4. `npm start`
+1. [Set up dev environment](https://reactnative.dev/docs/environment-setup) (Click on "React Native CLI Quickstart")
+2. Navigate to this repository's directory
+3. Run `npm i`
+4. Run `npx pod-install`
+5. [Add `GoogleService-Info.plist`](https://firebase.google.com/docs/ios/setup#add-config-file) to root folder
+6. Run `npm start`
 
 ## Copyright & license
 
