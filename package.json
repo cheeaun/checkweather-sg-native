@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint .",
     "postinstall": "npm run fix-rn-fcm && npm run ci-add-secrets",
-    "fix-rn-fcm": "curl https://gist.githubusercontent.com/actuosus/f24b18d89bce6da94441dbf9172b899e/raw/9e006628247d4a14d674d055903925bf5cf134af/@react-native-firebase+messaging+6.4.0.patch | git apply -v",
+    "fix-rn-fcm": "curl https://gist.githubusercontent.com/actuosus/f24b18d89bce6da94441dbf9172b899e/raw/9e006628247d4a14d674d055903925bf5cf134af/@react-native-firebase+messaging+6.4.0.patch | git apply -v || true",
     "ci-add-secrets": "node ./scripts/add-secrets.js",
     "pre-publish": "git apply pre-publish.patch",
     "undo-pre-publish": "git apply -R pre-publish.patch"
