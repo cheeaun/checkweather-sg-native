@@ -10,6 +10,14 @@ import {
 } from 'react-native';
 import { useAppState } from '@react-native-community/hooks';
 import messaging from '@react-native-firebase/messaging';
+import Mailer from 'react-native-mail';
+import {
+  getApplicationName,
+  getReadableVersion,
+  getSystemName,
+  getSystemVersion,
+  getModel,
+} from 'react-native-device-info';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import Link from './UI/Link';
@@ -240,17 +248,38 @@ export default () => {
       <View>
         <SheetMenu
           isLink
-          onPress={() => Linking.openURL('https://twitter.com/cheeaun/')}
+          onPress={() => {
+            const email = 'cheeaun+checkweathersg@gmail.com';
+            const subject = `${getApplicationName()} feedback`;
+            const body = `
+
+
+            Additional Info (don't remove):
+            ${getApplicationName()} ${getReadableVersion()}
+            ${getModel()} (${getSystemName()} ${getSystemVersion()})`.replace(
+              / {2,}/g,
+              '',
+            );
+
+            Mailer.mail(
+              {
+                recipients: [email],
+                subject,
+                body,
+              },
+              (err, ev) => {
+                if (err) {
+                  Linking.openURL(
+                    `mailto:${email}?subject=${encodeURIComponent(
+                      subject,
+                    )}&body=${encodeURIComponent(body)}`,
+                  );
+                }
+              },
+            );
+          }}
         >
-          Made by @cheeaun
-        </SheetMenu>
-        <SheetMenu
-          isLink
-          onPress={() =>
-            Linking.openURL('https://github.com/cheeaun/checkweather-sg-native')
-          }
-        >
-          Open-sourced on GitHub
+          Share Feedback
         </SheetMenu>
         <SheetMenu
           isLink
