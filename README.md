@@ -6,12 +6,17 @@ This is a native mobile app version of the [web app](https://github.com/cheeaun/
 
 ## Features
 
-- **🌧 2-hour weather map**<br>
-  Observe how the rain clouds move over time.
-- **🔔 Periodic rain alerts**<br>
-  Tap on ⓘ to enable rain alert notifications.
-- **📡 Weather map in Today View**<br>
-  Up-to-the-minute weather viewable on the Today widget.
+### **🌧 2-hour weather map**
+
+Observe how the rain clouds move over time. Temperature (°C), Relative humidity (%) and rainfall (mm) measurements are displayed together with precipitation radar that is updated every 5 minutes to give better context of the past and forecast of the current weather conditions.
+
+### **🔔 Periodic rain alerts**
+
+Tap on ⓘ to enable rain alert notifications. Push notifications are sent every time there's significant rain cloud coverage over Singapore, from the beginning, all the way until the rain goes away. Notifications are sent periodically with coverage percentage information to give a sense of how the clouds move and how fast the rain goes by.
+
+### **📡 Weather map in Today View**
+
+Up-to-the-minute weather viewable on the Today widget. The latest rain precipitation radar and temperature (°C) information are always accessible and viewable in a simple swipe to the Today View from the Lock screen or the Home Screen. Way more useful than any other weather widgets that only show temperatures and fancy charts.
 
 ## Setup
 
