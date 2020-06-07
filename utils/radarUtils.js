@@ -1,7 +1,7 @@
 import contours from 'd3-contour/src/contours';
 import nanomemoize from 'nano-memoize';
 import { round } from '@turf/helpers';
-import { chaikin } from 'chaikin';
+import chaikin from './chaikin';
 
 import {
   width,
@@ -59,9 +59,12 @@ const convertValues2GeoJSON = nanomemoize(
           geometry: {
             type,
             coordinates: coordinates.map(c1 =>
-              c1.map(c2 =>
-                chaikin(c2.map(([x, y]) => [convertX2Lng(x), convertY2Lat(y)])),
-              ),
+              c1.map(c2 => {
+                c2.pop(); // Remove last coord
+                return chaikin(
+                  c2.map(([x, y]) => [convertX2Lng(x), convertY2Lat(y)]),
+                );
+              }),
             ),
           },
         });
