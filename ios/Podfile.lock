@@ -635,17 +635,17 @@ PODS:
     - React
   - react-native-mail (5.0.1):
     - React
-  - react-native-mapbox-gl (8.1.0-beta.1):
+  - react-native-mapbox-gl (8.1.0-rc.1):
     - "@react-native-mapbox-gl-mapbox-static (~> 5.8)"
     - Mapbox-iOS-SDK (~> 5.8)
     - React
-    - react-native-mapbox-gl/DynamicLibrary (= 8.1.0-beta.1)
-    - react-native-mapbox-gl/StaticLibraryFixer (= 8.1.0-beta.1)
-  - react-native-mapbox-gl/DynamicLibrary (8.1.0-beta.1):
+    - react-native-mapbox-gl/DynamicLibrary (= 8.1.0-rc.1)
+    - react-native-mapbox-gl/StaticLibraryFixer (= 8.1.0-rc.1)
+  - react-native-mapbox-gl/DynamicLibrary (8.1.0-rc.1):
     - "@react-native-mapbox-gl-mapbox-static (~> 5.8)"
     - Mapbox-iOS-SDK (~> 5.8)
     - React
-  - react-native-mapbox-gl/StaticLibraryFixer (8.1.0-beta.1):
+  - react-native-mapbox-gl/StaticLibraryFixer (8.1.0-rc.1):
     - "@react-native-mapbox-gl-mapbox-static (~> 5.8)"
     - Mapbox-iOS-SDK (~> 5.8)
     - React
@@ -714,21 +714,21 @@ PODS:
     - ReactCommon/callinvoker (= 0.62.2)
   - RNDeviceInfo (5.6.1):
     - React
-  - RNFBApp (7.1.4):
+  - RNFBApp (7.2.1):
     - Firebase/CoreOnly (~> 6.25.0)
     - React
-  - RNFBFirestore (7.1.5):
+  - RNFBFirestore (7.1.7):
     - Firebase/Firestore (~> 6.25.0)
     - React
     - RNFBApp
-  - RNFBMessaging (7.1.4):
+  - RNFBMessaging (7.1.5):
     - Firebase/Analytics (~> 6.25.0)
     - Firebase/Messaging (~> 6.25.0)
     - React
     - RNFBApp
   - RNGestureHandler (1.6.1):
     - React
-  - RNShare (3.3.2):
+  - RNShare (3.3.3):
     - React
   - RNStaticSafeAreaInsets (2.1.1):
     - React
@@ -1076,7 +1076,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-mail: 685104c633d50ea3e15595acc89ab0eb9ee9cfd2
-  react-native-mapbox-gl: 0a688ca4060ac73e11ed928c2f9a7b70b4665f99
+  react-native-mapbox-gl: 6f0055122d1d672736e1609a97714b633be0990e
   react-native-netinfo: 9b9929fcfa4aabe92f49a9fb3f25394cc8721e87
   react-native-slider: 05f11678260cb27c3d00a2dd1558b623be3ec8d2
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
@@ -1090,11 +1090,11 @@ SPEC CHECKSUMS:
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
   RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
-  RNFBApp: fa6c2bf4e67ca1db74d04eec5909189b5500c9b8
-  RNFBFirestore: 2429fbb550289d491665f70312dcd80831f3f77a
-  RNFBMessaging: a914f734937d45855ea8b63d5fd198e2c5ee3972
+  RNFBApp: def13f6392e7c9839c938879f065ec0088c4496a
+  RNFBFirestore: b6209c3c80f6dc934e72443c007299f594041904
+  RNFBMessaging: 0c4c3795b35d319e33c58fabc5c7406dfcb15b06
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
-  RNShare: bd6518701db274b8ba282b33620885f2225a5bcf
+  RNShare: f4ec422e27904e0dc9310038d1110460a59ad30d
   RNStaticSafeAreaInsets: 6103cf09647fa427186d30f67b0f5163c1ae8252
   UMAppLoader: ae5eaee9f3c8cc847c631a579fed20d217de5913
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
