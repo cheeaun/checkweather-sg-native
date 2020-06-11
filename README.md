@@ -4,6 +4,8 @@
 
 This is a native mobile app version of the [web app](https://github.com/cheeaun/checkweather-sg).
 
+<img src="screenshots/iPhone-5.8-1.png" alt="screenshot" width="400">
+
 ## Features
 
 ### **🌧 2-hour weather map**
