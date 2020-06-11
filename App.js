@@ -33,7 +33,6 @@ import WelcomeSheet from './components/WelcomeSheet';
 import WindDirectionContext from './contexts/wind-direction';
 
 import meanAngleDeg from './utils/meanAngleDeg';
-import testRadar from './utils/testRadar';
 import {
   convertRadar2Values,
   convertValues2GeoJSON,
@@ -43,7 +42,8 @@ import trackEvent from './utils/trackEvent';
 
 import styles from './styles/global';
 
-const TEST_RADAR = false;
+const testRadar = __DEV__ ? require('./utils/testRadar').default : () => {};
+const TESTING_MODE = __DEV__ && false;
 
 const RAINAREA_COUNT = 25;
 const weatherDB = firestore()
@@ -82,23 +82,31 @@ const App = () => {
   };
 
   const [windDirections, setWindDirections] = useState([]);
+  const handleObservations = obs => {
+    const windDirs = [];
+    const points = obs.map(d => {
+      const { id, lng, lat, ...props } = d;
+      if (props.wind_direction) {
+        windDirs.push(props.wind_direction);
+      }
+      return point([lng, lat], props, { id });
+    });
+    setWindDirections(windDirs);
+    const pointsCollection = featureCollection(points);
+    setObservations(pointsCollection);
+  };
   const showObservations = useCallback(() => {
-    fetch('https://api.checkweather.sg/v2/observations')
-      .then(res => res.json())
-      .then(data => {
-        const windDirs = [];
-        const points = data.map(d => {
-          const { id, lng, lat, ...props } = d;
-          if (props.wind_direction) {
-            windDirs.push(props.wind_direction);
-          }
-          return point([lng, lat], props, { id });
-        });
-        setWindDirections(windDirs);
-        const pointsCollection = featureCollection(points);
-        setObservations(pointsCollection);
-      })
-      .catch(e => {});
+    if (TESTING_MODE) {
+      const obs = require('./test-snapshots/observations.json');
+      setTimeout(() => {
+        handleObservations(obs);
+      }, 300);
+    } else {
+      fetch('https://api.checkweather.sg/v2/observations')
+        .then(res => res.json())
+        .then(handleObservations)
+        .catch(e => {});
+    }
   }, []);
   useEffect(showObservations, []);
   useInterval(
@@ -156,12 +164,9 @@ const App = () => {
       if (snapshotID !== snapshotCount.current) return;
 
       const doc = docs[i];
-      const rainarea = doc.data();
-      const values = convertRadar2Values(
-        doc.id,
-        TEST_RADAR ? testRadar() : rainarea.radar,
-      );
-      const geojsons = convertValues2GeoJSON(doc.id, values);
+      const rainarea = TESTING_MODE ? testRadar(i) : doc.data();
+      const values = convertRadar2Values(rainarea.id, rainarea.radar);
+      const geojsons = convertValues2GeoJSON(rainarea.id, values);
       geoJSONList.push(...geojsons);
       shots.push(rainarea);
 
@@ -174,12 +179,12 @@ const App = () => {
 
       const nextDoc = docs[i + 1];
       if (nextDoc) {
-        const nextRainArea = nextDoc.data();
+        const nextRainArea = TESTING_MODE ? testRadar(i) : nextDoc.data();
         const nextValues = convertRadar2Values(
-          nextDoc.id,
-          TEST_RADAR ? testRadar() : nextRainArea.radar,
+          nextRainArea.id,
+          nextRainArea.radar,
         );
-        const midID = `${(Number(doc.id) + Number(nextDoc.id)) / 2}`;
+        const midID = `${(Number(rainarea.id) + Number(nextRainArea.id)) / 2}`;
         const midValues = genMidValues(midID, values, nextValues);
         const midGeojsons = convertValues2GeoJSON(midID, midValues);
         geoJSONList.push(...midGeojsons);
@@ -222,17 +227,17 @@ const App = () => {
     setLoading(true);
     clearTimeout(snapshotTimeout.current);
 
-    if (fromCache) {
+    if (fromCache && !TESTING_MODE) {
       snapshotTimeout.current = setTimeout(() => {
         processSnapshots(snapshotID, s);
       }, 1500);
     } else {
-      if (first.current) {
+      if (first.current && !TESTING_MODE) {
         const firstDoc = s.docs[0];
         const radar = firstDoc.data().radar;
         const values = convertRadar2Values(
           firstDoc.id,
-          TEST_RADAR ? testRadar() : radar,
+          TESTING_MODE ? testRadar() : radar,
         );
         const geojsons = convertValues2GeoJSON(firstDoc.id, values);
         const collection = featureCollection(geojsons);
