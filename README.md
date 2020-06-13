@@ -4,7 +4,7 @@
 
 This is a native mobile app version of the [web app](https://github.com/cheeaun/checkweather-sg).
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store" width="200"><br>
+[<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store" width="200">](https://apps.apple.com/app/check-weather-sg/id1510170224)<br>
 
 <img src="screenshots/iPhone-5.5-1.png" alt="screenshot" width="400">
 
