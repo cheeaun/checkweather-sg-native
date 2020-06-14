@@ -42,8 +42,8 @@ import trackEvent from './utils/trackEvent';
 
 import styles from './styles/global';
 
-const testRadar = __DEV__ ? require('./utils/testRadar').default : () => {};
 const TESTING_MODE = __DEV__ && false;
+const testSnapshot = __DEV__ ? require('./utils/testSnapshot').default : null;
 
 const RAINAREA_COUNT = 25;
 const weatherDB = firestore()
@@ -158,13 +158,13 @@ const App = () => {
     const geoJSONList = [];
     let timeDiff;
 
-    const docs = s.docs.reverse();
+    const docs = s.docs;
     let startTime = Date.now();
-    for (let i = 0, l = docs.length; i < l; i++) {
+    for (let i = docs.length - 1; i >= 0; i--) {
       if (snapshotID !== snapshotCount.current) return;
 
       const doc = docs[i];
-      const rainarea = TESTING_MODE ? testRadar(i) : doc.data();
+      const rainarea = doc.data();
       const values = convertRadar2Values(rainarea.id, rainarea.radar);
       const geojsons = convertValues2GeoJSON(rainarea.id, values);
       geoJSONList.push(...geojsons);
@@ -177,9 +177,9 @@ const App = () => {
         startTime = Date.now();
       }
 
-      const nextDoc = docs[i + 1];
+      const nextDoc = docs[i - 1];
       if (nextDoc) {
-        const nextRainArea = TESTING_MODE ? testRadar(i) : nextDoc.data();
+        const nextRainArea = nextDoc.data();
         const nextValues = convertRadar2Values(
           nextRainArea.id,
           nextRainArea.radar,
@@ -220,6 +220,7 @@ const App = () => {
 
   let snapshotTimeout = useRef(null);
   const onSnapshot = s => {
+    if (TESTING_MODE) s = testSnapshot();
     if (s.empty) return;
     const snapshotID = ++snapshotCount.current;
     const { fromCache } = s.metadata;
@@ -227,18 +228,15 @@ const App = () => {
     setLoading(true);
     clearTimeout(snapshotTimeout.current);
 
-    if (fromCache && !TESTING_MODE) {
+    if (fromCache) {
       snapshotTimeout.current = setTimeout(() => {
         processSnapshots(snapshotID, s);
       }, 1500);
     } else {
-      if (first.current && !TESTING_MODE) {
+      if (first.current) {
         const firstDoc = s.docs[0];
         const radar = firstDoc.data().radar;
-        const values = convertRadar2Values(
-          firstDoc.id,
-          TESTING_MODE ? testRadar() : radar,
-        );
+        const values = convertRadar2Values(firstDoc.id, radar);
         const geojsons = convertValues2GeoJSON(firstDoc.id, values);
         const collection = featureCollection(geojsons);
         setRainRadarGeoJSON(collection);
