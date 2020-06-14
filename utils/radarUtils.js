@@ -21,10 +21,12 @@ const convertY2Lat = nanomemoize(y =>
   round(upperLat - (y / height) * distanceLat, 4),
 );
 
+const zerosArray = new Array(width * height).fill(0);
+
 const convertRadar2Values = nanomemoize(
   (id, radar) => {
     const rows = radar.trimEnd().split(/\n/g);
-    const values = new Array(width * height).fill(0);
+    const values = zerosArray.slice();
     for (let y = 0, l = rows.length; y < l; y++) {
       const chars = rows[y];
       for (let x = chars.search(/[^\s]/), rl = chars.length; x < rl; x++) {
@@ -61,9 +63,10 @@ const convertValues2GeoJSON = nanomemoize(
             coordinates: coordinates.map(c1 =>
               c1.map(c2 => {
                 c2.pop(); // Remove last coord
-                return chaikin(
-                  c2.map(([x, y]) => [convertX2Lng(x), convertY2Lat(y)]),
-                );
+                return chaikin(c2).map(([x, y]) => [
+                  convertX2Lng(x),
+                  convertY2Lat(y),
+                ]);
               }),
             ),
           },

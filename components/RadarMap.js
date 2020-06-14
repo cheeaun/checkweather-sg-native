@@ -59,6 +59,8 @@ const radarFillColor = [
   ...radarColors,
 ];
 
+const maxZoomLevel = 14;
+
 export default ({
   mapRef,
   cameraRef,
@@ -126,7 +128,7 @@ export default ({
           bounds,
         }}
         minZoomLevel={8}
-        maxZoomLevel={14}
+        maxZoomLevel={maxZoomLevel}
       />
       <Images
         images={{
@@ -137,6 +139,9 @@ export default ({
         ref={rainRadarSourceRef}
         id="rainradar"
         shape={featureCollection([])}
+        tolerance={0.38}
+        buffer={0}
+        maxZoomLevel={maxZoomLevel}
       >
         <FillLayer
           ref={rainRadarLayerRef}
@@ -164,6 +169,7 @@ export default ({
         shape={featureCollection([])}
         tolerance={5}
         buffer={0}
+        maxZoomLevel={maxZoomLevel}
       >
         <SymbolLayer
           id="windirections"
@@ -240,7 +246,13 @@ export default ({
         />
       </ShapeSource>
       {!hideBoundingBox && (
-        <ShapeSource id="box" tolerance={10} buffer={0} shape={bboxGeoJSON}>
+        <ShapeSource
+          id="box"
+          tolerance={10}
+          buffer={0}
+          shape={bboxGeoJSON}
+          maxZoomLevel={maxZoomLevel}
+        >
           <FillLayer
             id="bbox"
             style={{
