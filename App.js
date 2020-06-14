@@ -159,6 +159,14 @@ const App = () => {
     let timeDiff;
 
     const docs = s.docs;
+
+    // FOR DEBUGGING
+    // const allDocs = docs
+    //   .slice()
+    //   .reverse()
+    //   .map(d => d.data());
+    // console.log(allDocs);
+
     let startTime = Date.now();
     for (let i = docs.length - 1; i >= 0; i--) {
       if (snapshotID !== snapshotCount.current) return;
