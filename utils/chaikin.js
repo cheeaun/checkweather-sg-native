@@ -27,7 +27,7 @@ function chaikin(pts, iterations = 1, ratio = 0.25) {
     newPts.push(newPtA, newPtB);
   }
 
-  return chaikin(newPts, ratio, iterations - 1);
+  return chaikin(newPts, iterations - 1, ratio);
 }
 
 export default chaikin;
