@@ -34,7 +34,7 @@
     "expo-location": "~9.0.0",
     "nano-memoize": "~1.2.0",
     "react": "16.13.1",
-    "react-native": "0.63.2",
+    "react-native": "0.63.4",
     "react-native-device-info": "~6.0.4",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-mail": "~5.2.0",
