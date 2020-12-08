@@ -22,6 +22,10 @@ Tap on ⓘ to enable rain alert notifications. Push notifications are sent every
 
 Up-to-the-minute weather viewable on the Today widget. The latest rain precipitation radar and temperature (°C) information are always accessible and viewable in a simple swipe to the Today View from the Lock screen or the Home Screen. Way more useful than any other weather widgets that only show temperatures and fancy charts.
 
+### **📡 Weather and radar map widget** (New for iOS 14+)
+
+At-a-glance weather map widget viewable on the Home Screen and Today View. The latest rain precipitation radar and temperature (°C) information are always accessible and viewable in 3 widget sizes. Way more useful than any other weather widgets that only show temperatures and fancy charts.
+
 ## Setup
 
 1. [Set up dev environment](https://reactnative.dev/docs/environment-setup) (Click on "React Native CLI Quickstart")
