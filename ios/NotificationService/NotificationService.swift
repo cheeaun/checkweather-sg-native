@@ -7,6 +7,7 @@
 
 import UserNotifications
 import Firebase
+import WidgetKit
 
 class NotificationService: UNNotificationServiceExtension {
 
@@ -22,6 +23,10 @@ class NotificationService: UNNotificationServiceExtension {
         if let bestAttemptContent = bestAttemptContent {
 //            bestAttemptContent.title = "\(bestAttemptContent.title) [modified!]"
             Messaging.serviceExtension().populateNotificationContent(bestAttemptContent, withContentHandler: contentHandler)
+        }
+
+        if #available(iOSApplicationExtension 14.0, *) {
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
     
