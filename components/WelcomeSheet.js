@@ -1,10 +1,13 @@
 import React, { forwardRef } from 'react';
-import { Animated, View, Text } from 'react-native';
+import { Animated, View, Text, Platform } from 'react-native';
 
 import BlurView from './UI/BlurView';
 import Button from './UI/Button';
 
 import styles from '../styles/global';
+
+const supportsWidgets =
+  Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 14;
 
 export default forwardRef(
   ({ onLayout = () => {}, onClose = () => {} }, ref) => {
@@ -50,8 +53,12 @@ export default forwardRef(
                 ],
                 [
                   '📡',
-                  'Weather map in Today View',
-                  'Up-to-the-minute weather viewable on the Today widget.',
+                  supportsWidgets
+                    ? 'Weather and radar map widget'
+                    : 'Weather map in Today View',
+                  supportsWidgets
+                    ? 'At-a-glance weather map widget viewable on the Home Screen and Today View.'
+                    : 'Up-to-the-minute weather viewable on the Today widget.',
                 ],
               ].map(([icon, heading, desc]) => (
                 <View
