@@ -15,7 +15,9 @@ class NotificationService: UNNotificationServiceExtension {
     var bestAttemptContent: UNMutableNotificationContent?
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        if #available(iOSApplicationExtension 14.0, *) {
+          WidgetCenter.shared.reloadAllTimelines()
+        }
 
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
@@ -23,10 +25,6 @@ class NotificationService: UNNotificationServiceExtension {
         if let bestAttemptContent = bestAttemptContent {
 //            bestAttemptContent.title = "\(bestAttemptContent.title) [modified!]"
             Messaging.serviceExtension().populateNotificationContent(bestAttemptContent, withContentHandler: contentHandler)
-        }
-
-        if #available(iOSApplicationExtension 14.0, *) {
-            WidgetCenter.shared.reloadAllTimelines()
         }
     }
     
