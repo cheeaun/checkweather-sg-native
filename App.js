@@ -74,7 +74,7 @@ const App = () => {
   }, [currentAppState === 'active']);
 
   const observationsSourceRef = useRef(null);
-  const setObservations = shape => {
+  const setObservations = (shape) => {
     if (shape && observationsSourceRef.current) {
       observationsSourceRef.current.setNativeProps({ shape });
       setShotDataRef('observationsShape', shape);
@@ -82,9 +82,9 @@ const App = () => {
   };
 
   const [windDirections, setWindDirections] = useState([]);
-  const handleObservations = obs => {
+  const handleObservations = (obs) => {
     const windDirs = [];
-    const points = obs.map(d => {
+    const points = obs.map((d) => {
       const { id, lng, lat, ...props } = d;
       if (props.wind_direction) {
         windDirs.push(props.wind_direction);
@@ -103,9 +103,9 @@ const App = () => {
       }, 300);
     } else {
       fetch('https://api.checkweather.sg/v2/observations')
-        .then(res => res.json())
+        .then((res) => res.json())
         .then(handleObservations)
-        .catch(e => {});
+        .catch((e) => {});
     }
   }, []);
   useEffect(showObservations, []);
@@ -142,7 +142,7 @@ const App = () => {
   };
 
   const rainRadarSourceRef = useRef(null);
-  const setRainRadarGeoJSON = shape => {
+  const setRainRadarGeoJSON = (shape) => {
     if (shape && rainRadarSourceRef.current) {
       rainRadarSourceRef.current.setNativeProps({ shape });
       setShotDataRef('rainRadarShape', shape);
@@ -227,7 +227,7 @@ const App = () => {
   };
 
   let snapshotTimeout = useRef(null);
-  const onSnapshot = s => {
+  const onSnapshot = (s) => {
     if (TESTING_MODE) s = testSnapshot();
     if (s.empty) return;
     const snapshotID = ++snapshotCount.current;
@@ -275,7 +275,7 @@ const App = () => {
   });
 
   const mapCornersAnim = useRef(new Animated.Value(1)).current;
-  const setMapCornersVisible = visible => {
+  const setMapCornersVisible = (visible) => {
     Animated.timing(mapCornersAnim, {
       useNativeDriver: true,
       toValue: visible ? 1 : 0,
