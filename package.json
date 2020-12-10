@@ -32,6 +32,7 @@
     "expo-image-manipulator": "~8.3.0",
     "expo-linear-gradient": "~8.3.1",
     "expo-location": "~9.0.1",
+    "ky": "~0.25.1",
     "nano-memoize": "~1.2.1",
     "react": "16.13.1",
     "react-native": "0.63.4",

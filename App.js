@@ -19,6 +19,7 @@ import firestore from '@react-native-firebase/firestore';
 import { featureCollection, point } from '@turf/helpers';
 import { useNetInfo } from '@react-native-community/netinfo';
 import * as Haptics from 'expo-haptics';
+import ky from 'ky';
 
 import SheetModal from './components/UI/SheetModal';
 import RadarMap from './components/RadarMap';
@@ -102,8 +103,8 @@ const App = () => {
         handleObservations(obs);
       }, 300);
     } else {
-      fetch('https://api.checkweather.sg/v2/observations')
-        .then((res) => res.json())
+      ky.get('https://api.checkweather.sg/v2/observations', { fetch })
+        .json()
         .then(handleObservations)
         .catch((e) => {});
     }
